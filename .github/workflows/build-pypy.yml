@@ -1,0 +1,40 @@
+name: Build PyPy
+
+on:
+  push:
+    branches:
+      - '**'
+    paths:
+      - 'builder/**'
+      - '.github/workflows/build-pypy.yml'
+
+jobs:
+  Build:
+    runs-on: self-hosted
+    name: Build PyPy
+    env:
+      PYPY_BASE: 3.9
+      PYPY_VERSION: 7.3.11
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v2.1.0
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2.2.1
+
+      - name: Build Builder Image
+        run: |
+          cd builder/${{ env.PYPY_BASE }} && docker build -t alpine-pypy-builder:${{ env.PYPY_BASE }}-${{ env.PYPY_VERSION }}-bootstrap-${{ github.sha }} -f bootstrap/Dockerfile .
+
+      - name: Run Build
+        run: |
+          docker run --rm -v $(pwd)/pypy:/tmp alpine-pypy-builder:${{ env.PYPY_BASE }}-${{ env.PYPY_VERSION }}-bootstrap-${{ github.sha }}
+
+      - name: Upload PyPy to Artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: pypy
+          path: pypy/usession-release-pypy3.9-v7.3.11-1/
