@@ -15,6 +15,7 @@ jobs:
   Publish:
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
         target: ["python-2_7", "alpine-pypy"]
     steps:

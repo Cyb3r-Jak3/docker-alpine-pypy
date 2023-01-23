@@ -36,5 +36,5 @@ jobs:
       - name: Upload PyPy to Artifacts
         uses: actions/upload-artifact@v3
         with:
-          name: pypy
-          path: pypy/usession-release-pypy3.9-v7.3.11-1/
+          name: pypy${{ env.PYPY_BASE }}-v${{ env.PYPY_VERSION }}
+          path: pypy/usession-release-pypy${{ env.PYPY_BASE }}-v${{ env.PYPY_VERSION }}/build/**.tar.bz2
