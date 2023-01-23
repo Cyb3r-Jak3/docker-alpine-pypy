@@ -15,7 +15,7 @@ The main image, found in [export](./export/), is an alpine image with PyPy. The 
 
 ### Builder Images
 
-The images that are used to build PyPy can be found in [builder](./builder/). The image tag format for this image is `alpine-pypy-builder:$PYPY_VERSION-${BOOTSTRAP}-$ALPINE_VERSION`
+The images that are used to build PyPy can be found in [builder](./builder/). The image tag format for this image is `alpine-pypy-builder:$PYPY_VERSION-$BOOTSTRAP-$ALPINE_VERSION`
 
 Where:
 
@@ -27,7 +27,7 @@ Where:
 
 ### Python 2.7.18 Image
 
-In order to get the bootstrap image, Python 2.7 is need. There is a single tag for this image: `python-2.7.18` which is python 2.7.18 on alpine 3.17. **This image should only be used for building PyPy**
+In order to get the bootstrap image, Python 2.7 is need. There is a single tag for this image: `python-2.7.18:3.17` which is python 2.7.18 on alpine 3.17. **This image should only be used for building PyPy**
 
 ## PyPy Downloads
 
