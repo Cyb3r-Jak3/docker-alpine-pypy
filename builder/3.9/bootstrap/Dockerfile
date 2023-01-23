@@ -1,4 +1,4 @@
-FROM cyb3rjak3/python-2.7.18:latest
+FROM cyb3rjak3/python-2.7.18:3.17
 
 
 # Add build dependencies
