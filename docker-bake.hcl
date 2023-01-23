@@ -18,7 +18,7 @@ target "alpine-pypy" {
 }
 
 
-target "python-2.7" {
+target "python-2_7" {
     dockerfile = "./python-2.7/Dockerfile"
     tags = [
         "cyb3rjak3/python-2.7.18:3.17",
@@ -31,5 +31,5 @@ target "alpine-pypy-release" {
 }
 
 target "python-2.7-release" {
-    inherits = ["docker-metadata-action", "python-2.7"]
+    inherits = ["docker-metadata-action", "python-2_7"]
 }
