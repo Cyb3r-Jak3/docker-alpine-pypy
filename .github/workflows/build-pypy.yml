@@ -27,11 +27,11 @@ jobs:
 
       - name: Build Builder Image
         run: |
-          cd builder/${{ env.PYPY_BASE }} && docker build -t alpine-pypy-builder:${{ env.PYPY_BASE }}-${{ env.PYPY_VERSION }}-bootstrap-${{ github.sha }} -f bootstrap/Dockerfile .
+          cd builder/${{ env.PYPY_BASE }} && docker build --platform linux/amd64 -t alpine-pypy-builder:${{ env.PYPY_BASE }}-${{ env.PYPY_VERSION }}-bootstrap-${{ github.sha }} -f bootstrap/Dockerfile .
 
       - name: Run Build
         run: |
-          docker run --rm -v $(pwd)/pypy:/tmp alpine-pypy-builder:${{ env.PYPY_BASE }}-${{ env.PYPY_VERSION }}-bootstrap-${{ github.sha }}
+          docker run --platform linux/amd64 --rm -v $(pwd)/pypy:/tmp alpine-pypy-builder:${{ env.PYPY_BASE }}-${{ env.PYPY_VERSION }}-bootstrap-${{ github.sha }}
 
       - name: Upload PyPy to Artifacts
         uses: actions/upload-artifact@v3

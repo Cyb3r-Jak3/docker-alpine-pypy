@@ -30,6 +30,6 @@ target "alpine-pypy-release" {
     inherits = ["docker-metadata-action", "alpine-pypy"]
 }
 
-target "python-2.7-release" {
+target "python-2_7-release" {
     inherits = ["docker-metadata-action", "python-2_7"]
 }
