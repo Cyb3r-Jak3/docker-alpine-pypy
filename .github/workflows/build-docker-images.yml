@@ -8,6 +8,7 @@ on:
       - 'export/**'
       - 'python2.7/**'
       - '.github/workflows/build-docker-images.yml'
+      - 'docker-bake.hcl'
 
 
 jobs:

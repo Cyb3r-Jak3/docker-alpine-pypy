@@ -38,6 +38,6 @@ RUN set -ex; \
 WORKDIR /usr/src/pypy
 
 COPY ./build.sh /build.sh
-CMD ["/build.sh"]
+CMD ["/bin/sh /build.sh"]
 
 VOLUME /tmp
