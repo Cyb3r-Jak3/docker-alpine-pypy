@@ -28,7 +28,7 @@ jobs:
         with:
           registry: ghcr.io
           username: ${{ github.repository_owner }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+          password: ${{ secrets.PyPy_Token }}
 
       - uses: actions/checkout@v3
 
@@ -61,7 +61,7 @@ jobs:
     container:
       credentials:
         username: ${{ github.repository_owner }}
-        password: ${{ secrets.GITHUB_TOKEN }}
+        password: ${{ secrets.PyPy_Token }}
       image: ghcr.io/cyb3r-jak3/alpine-pypy-builder:3.9-v7.3.11-bootstrap-${{ github.sha }}
       # volumes:
       #   - "./pypy:/tmp"
