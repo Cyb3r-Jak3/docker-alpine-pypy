@@ -17,7 +17,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        target: ["python-2_7-release", "alpine-pypy-release", "alpine-pypy-builder-release"]
+        target: ["python-2_7", "alpine-pypy", "alpine-pypy-builder"]
     steps:
       - uses: actions/checkout@v3
 

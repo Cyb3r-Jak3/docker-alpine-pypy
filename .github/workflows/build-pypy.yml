@@ -27,7 +27,7 @@ jobs:
 
       - name: Build Builder Image
         run: |
-          cd builder/ && chmod +x build.sh && docker build --platform linux/amd64 -t alpine-pypy-builder:${{ env.PYPY_BASE }}-${{ env.PYPY_VERSION }}-bootstrap-${{ github.sha }} -f bootstrap/Dockerfile .
+          cd builder/ && chmod +x build.sh && docker build --platform linux/amd64 --build-arg PYPY_BASE=${{ env.PYPY_BASE }} -t alpine-pypy-builder:${{ env.PYPY_BASE }}-${{ env.PYPY_VERSION }}-bootstrap-${{ github.sha }} .
 
       - name: Run Build
         run: |
