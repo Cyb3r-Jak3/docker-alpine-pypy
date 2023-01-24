@@ -27,7 +27,7 @@ jobs:
 
       - name: Build Builder Image
         run: |
-          cd builder/${{ env.PYPY_BASE }} && chmod +x build.sh && docker build --platform linux/amd64 -t alpine-pypy-builder:${{ env.PYPY_BASE }}-${{ env.PYPY_VERSION }}-bootstrap-${{ github.sha }} -f bootstrap/Dockerfile .
+          cd builder/ && chmod +x build.sh && docker build --platform linux/amd64 -t alpine-pypy-builder:${{ env.PYPY_BASE }}-${{ env.PYPY_VERSION }}-bootstrap-${{ github.sha }} -f bootstrap/Dockerfile .
 
       - name: Run Build
         run: |
@@ -37,4 +37,4 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: pypy${{ env.PYPY_BASE }}-v${{ env.PYPY_VERSION }}
-          path: pypy/usession-release-pypy${{ env.PYPY_BASE }}-v${{ env.PYPY_VERSION }}/build/**.tar.bz2
+          path: ./pypy/usession-release-pypy${{ env.PYPY_BASE }}-v${{ env.PYPY_VERSION }}/build/**.tar.bz2

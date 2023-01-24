@@ -17,7 +17,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        target: ["python-2_7", "alpine-pypy"]
+        target: ["python-2_7-release", "alpine-pypy-release", "alpine-pypy-builder-release"]
     steps:
       - uses: actions/checkout@v3
 
@@ -50,7 +50,6 @@ jobs:
         with:
           flavor: |
             latest=false
-          images: cyb3rjak3/${{ matrix.target }},ghcr.io/cyb3r-jak3/${{ matrix.target }}
           labels: |
             org.label-schema.vcs-url=https://github.com/Cyb3r-Jak3/docker-alpine-pypy.git
             maintainer=Cyb3r Jak3 git@cyberjake.xyz
@@ -62,7 +61,7 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2.2.1
 
-      - name: Build
+      - name: Build ${{ matrix.target }}
         uses: docker/bake-action@v2.3.0
         with:
           files: |
