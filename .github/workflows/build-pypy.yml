@@ -49,8 +49,8 @@ jobs:
           build-args: |
             PYPY_BASE=${{ env.PYPY_BASE }}
           platforms: linux/amd64,linux/arm64/v8
-          cache-to: cache-to=type=gha,mode=max,scope=buildx-alpine-pypy-builder:${{ env.PYPY_BASE }}-v${{ env.PYPY_VERSION }}-bootstrap
-          cache-from: cache-from=type=gha,scope=buildx-alpine-pypy-builder:${{ env.PYPY_BASE }}-v${{ env.PYPY_VERSION }}-bootstrap
+          cache-to: type=gha,mode=max,scope=buildx-alpine-pypy-builder:${{ env.PYPY_BASE }}-v${{ env.PYPY_VERSION }}-bootstrap
+          cache-from: type=gha,scope=buildx-alpine-pypy-builder:${{ env.PYPY_BASE }}-v${{ env.PYPY_VERSION }}-bootstrap
 
   Build:
     runs-on: self-hosted
