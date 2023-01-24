@@ -19,3 +19,6 @@ cd "$BASE_DIR"/pypy/goal
 # Packaging
 cd "$BASE_DIR"/pypy/tool/release
 "$PYTHON" package.py --archive-name "$PYPY_NAME-v$PYPY_RELEASE_VERSION-$PYPY_ARCH"
+
+# Enable write so it can be cleaned up for GitHub self hosted runner
+chmod 777 "$PYPY_NAME-v$PYPY_RELEASE_VERSION-$PYPY_ARCH"
