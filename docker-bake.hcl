@@ -6,7 +6,7 @@ target "docker-metadata-action" {
     ]
 }
 
-target "alpine-pypy-3" {
+target "alpine-pypy-3_9" {
     context = "./export"
     tags = [
         "cyb3rjak3/alpine-pypy:3.9-7.3.11-3.17",
@@ -14,12 +14,13 @@ target "alpine-pypy-3" {
     ]
 }
 
-target "alpine-pypy-2" {
+target "alpine-pypy-2_7" {
     context = "./export"
     args = {
         PIP_URL = "https://bootstrap.pypa.io/pip/2.7/get-pip.py"
         PYPY_BASE = "2.7"
     }
+
     tags = [
         "cyb3rjak3/alpine-pypy:2.7-7.3.11-3.17",
         "ghcr.io/cyb3r-jak3/alpine-pypy:2.7-7.3.11-3.17"
@@ -65,7 +66,7 @@ target "python-2_7" {
 }
 
 target "alpine-pypy-release" {
-    inherits = ["docker-metadata-action", "alpine-pypy2", "alpine-pypy3"]
+    inherits = ["docker-metadata-action", "alpine-pypy-2_7", "alpine-pypy-3_9"]
     platforms = ["amd64"]
 }
 

@@ -8,13 +8,14 @@ on:
       - 'builder/**'
       - '.github/workflows/build-pypy.yml'
 
+env:
+  PYPY_BASE: 3.9
+  PYPY_VERSION: 7.3.11
+
 jobs:
-  Build:
+  Prep:
     runs-on: self-hosted
-    name: Build PyPy
-    env:
-      PYPY_BASE: 3.9
-      PYPY_VERSION: 7.3.11
+    name: Prep Docker Container
 
     steps:
       - uses: actions/checkout@v3
@@ -29,12 +30,24 @@ jobs:
         run: |
           cd builder/ && chmod +x build.sh && docker build --platform linux/amd64 --build-arg PYPY_BASE=${{ env.PYPY_BASE }} -t alpine-pypy-builder:${{ env.PYPY_BASE }}-${{ env.PYPY_VERSION }}-bootstrap-${{ github.sha }} .
 
+  Build:
+    runs-on: self-hosted
+    name: Run Container
+    needs: Prep
+    env:
+      PYPY_BASE: 3.9
+      PYPY_VERSION: 7.3.11
+    container:
+      image: alpine-pypy-builder:${{ env.PYPY_BASE }}-${{ env.PYPY_VERSION }}-bootstrap-${{ github.sha }}
+      # volumes:
+      #   - "./pypy:/tmp"
+      options: /bin/sh
+    steps:
       - name: Run Build
-        run: |
-          docker run --platform linux/amd64 --rm -v $(pwd)/pypy:/tmp alpine-pypy-builder:${{ env.PYPY_BASE }}-${{ env.PYPY_VERSION }}-bootstrap-${{ github.sha }}
+        run: /build.sh
 
       - name: Upload PyPy to Artifacts
         uses: actions/upload-artifact@v3
         with:
           name: pypy${{ env.PYPY_BASE }}-v${{ env.PYPY_VERSION }}
-          path: ./pypy/usession-release-pypy${{ env.PYPY_BASE }}-v${{ env.PYPY_VERSION }}/build/**.tar.bz2
+          path: ./tmp/usession-release-pypy${{ env.PYPY_BASE }}-v${{ env.PYPY_VERSION }}-1/build/**.tar.bz2
