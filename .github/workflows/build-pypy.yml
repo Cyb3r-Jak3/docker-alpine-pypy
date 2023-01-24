@@ -47,7 +47,7 @@ jobs:
           context: "builder/"
           push: true
           tags: ghcr.io/cyb3r-jak3/alpine-pypy-builder:${{ env.PYPY_BASE }}-v${{ env.PYPY_VERSION }}-bootstrap-${{ github.sha }}
-          build_args: |
+          build-args: |
             PYPY_BASE=${{ env.PYPY_BASE }}
 
       # - name: Build Builder Image
