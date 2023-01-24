@@ -7,6 +7,7 @@ on:
     paths:
       - 'builder/**'
       - '.github/workflows/build-pypy.yml'
+  workflow_dispatch:
 
 env:
   PYPY_BASE: 3.9
@@ -61,8 +62,6 @@ jobs:
         username: ${{ github.repository_owner }}
         password: ${{ secrets.GITHUB_TOKEN }}
       image: ghcr.io/cyb3r-jak3/alpine-pypy-builder:3.9-v7.3.11-bootstrap-${{ github.sha }}
-      # volumes:
-      #   - "./pypy:/tmp"
       options: --platform linux/amd64
     steps:
       - name: Run Build
