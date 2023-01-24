@@ -49,10 +49,8 @@ jobs:
           build-args: |
             PYPY_BASE=${{ env.PYPY_BASE }}
           platforms: linux/amd64,linux/arm64/v8
-
-      # - name: Build Builder Image
-      #   run: |
-      #     cd builder/ && chmod +x build.sh && docker build --platform linux/amd64 --build-arg PYPY_BASE=${{ env.PYPY_BASE }} -t alpine-pypy-builder:${{ env.PYPY_BASE }}-v${{ env.PYPY_VERSION }}-bootstrap-${{ github.sha }} .
+          cache-to: cache-to=type=gha,mode=max,scope=buildx-alpine-pypy-builder:${{ env.PYPY_BASE }}-v${{ env.PYPY_VERSION }}-bootstrap
+          cache-from: cache-from=type=gha,scope=buildx-alpine-pypy-builder:${{ env.PYPY_BASE }}-v${{ env.PYPY_VERSION }}-bootstrap
 
   Build:
     runs-on: self-hosted
@@ -65,7 +63,7 @@ jobs:
       image: ghcr.io/cyb3r-jak3/alpine-pypy-builder:3.9-v7.3.11-bootstrap-${{ github.sha }}
       # volumes:
       #   - "./pypy:/tmp"
-      # options: /bin/sh
+      options: --platform linux/amd64
     steps:
       - name: Run Build
         run: /build.sh
