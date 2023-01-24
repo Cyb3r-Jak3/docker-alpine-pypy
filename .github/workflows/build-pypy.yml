@@ -14,10 +14,22 @@ env:
 
 jobs:
   Prep:
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
     name: Prep Docker Container
+    permissions:
+      contents: read
+      packages: write
 
     steps:
+
+      - name: Login To GitHub
+        uses: docker/login-action@v2
+        if: ${{ startsWith(github.ref, 'refs/tags/v') }}
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
       - uses: actions/checkout@v3
 
       - name: Set up QEMU
@@ -26,19 +38,31 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2.2.1
 
-      - name: Build Builder Image
-        run: |
-          cd builder/ && chmod +x build.sh && docker build --platform linux/amd64 --build-arg PYPY_BASE=${{ env.PYPY_BASE }} -t alpine-pypy-builder:${{ env.PYPY_BASE }}-v${{ env.PYPY_VERSION }}-bootstrap-${{ github.sha }} .
+      - name: Chmox build script
+        run: chmod +x builder/build.sh
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v3
+        with:
+          context: "builder/"
+          push: true
+          tags: ghcr.io/cyb3r-jak3/alpine-pypy-builder:${{ env.PYPY_BASE }}-v${{ env.PYPY_VERSION }}-bootstrap-${{ github.sha }}
+          build_args: |
+            PYPY_BASE=${{ env.PYPY_BASE }}
+
+      # - name: Build Builder Image
+      #   run: |
+      #     cd builder/ && chmod +x build.sh && docker build --platform linux/amd64 --build-arg PYPY_BASE=${{ env.PYPY_BASE }} -t alpine-pypy-builder:${{ env.PYPY_BASE }}-v${{ env.PYPY_VERSION }}-bootstrap-${{ github.sha }} .
 
   Build:
     runs-on: self-hosted
     name: Run Container
     needs: Prep
-    env:
-      PYPY_BASE: 3.9
-      PYPY_VERSION: 7.3.11
     container:
-      image: alpine-pypy-builder:3.9-v7.3.11-bootstrap-${{ github.sha }}
+      credentials:
+        username: ${{ github.repository_owner }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+      image: ghcr.io/cyb3r-jak3/alpine-pypy-builder:3.9-v7.3.11-bootstrap-${{ github.sha }}
       # volumes:
       #   - "./pypy:/tmp"
       options: /bin/sh
@@ -50,4 +74,4 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: pypy${{ env.PYPY_BASE }}-v${{ env.PYPY_VERSION }}
-          path: ./tmp/usession-release-pypy${{ env.PYPY_BASE }}-v${{ env.PYPY_VERSION }}-1/build/**.tar.bz2
+          path: /tmp/usession-release-pypy${{ env.PYPY_BASE }}-v${{ env.PYPY_VERSION }}-1/build/**.tar.bz2

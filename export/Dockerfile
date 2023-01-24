@@ -44,7 +44,7 @@ ENV PYTHON_PIP_VERSION 20.0.2
 ARG PIP_URL=https://bootstrap.pypa.io/get-pip.py
 RUN set -ex; \
     \
-    wget -O get-pip.py '${PIP_URL}' && \
+    wget -O get-pip.py "${PIP_URL}" && \
     \
     pypy get-pip.py \
         --disable-pip-version-check \
