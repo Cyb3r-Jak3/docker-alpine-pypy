@@ -55,5 +55,6 @@ PyPy: 3.9-7.3.11 and Alpine: 3.17 generate a link of `https://pypy.cyberjake.xyz
 | PyPy Base | PyPy Version | Alpine Version |
 |-----------|--------------|----------------|
 | 3.9       | 7.3.11       | 3.17           |
+| 2.7       | 7.3.11       | 3.17           |
 
 Please make an issue if you want to see a specific version.

@@ -1,0 +1,90 @@
+name: Build Docker Images
+
+on:
+  push:
+    branches:
+      - '**'
+    paths:
+      - 'export/**'
+      - 'python2.7/**'
+      - '.github/workflows/build-docker-images.yml'
+      - 'docker-bake.hcl'
+
+
+jobs:
+  Publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    strategy:
+      fail-fast: false
+      matrix:
+        target: ["python-2_7", "alpine-pypy", "alpine-pypy-builder"]
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Login to Docker
+        uses: docker/login-action@v2
+        if: ${{ github.ref == 'refs/heads/main' }}
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Login To GitHub
+        uses: docker/login-action@v2
+        if: ${{ github.ref == 'refs/heads/main' }}
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Docker Meta
+        id: meta
+        uses: docker/metadata-action@v4
+        with:
+          flavor: |
+            latest=false
+          images: cyb3rjak3/${{ matrix.target }}
+          labels: |
+            org.label-schema.vcs-url=https://github.com/Cyb3r-Jak3/docker-alpine-pypy.git
+            maintainer=Cyb3r Jak3 git@cyberjake.xyz
+            org.opencontainers.image.vendor=cyb3rjak3
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Build ${{ matrix.target }}
+        uses: docker/bake-action@v2
+        with:
+          files: |
+            ${{ steps.meta.outputs.bake-file }}
+            ./docker-bake.hcl
+          targets: ${{ matrix.target }}-release
+          push: ${{ github.ref == 'refs/heads/main' }}
+          set: |
+            *.cache-from=type=gha,scope=buildx-${{ matrix.target }}
+            *.cache-to=type=gha,mode=max,scope=buildx-${{ matrix.target }}
+
+
+  Update-DockerHub:
+    runs-on: ubuntu-latest
+    name: Update DockerHub Descriptions
+    needs: Publish
+    if: github.ref == 'refs/heads/main'
+    strategy:
+      fail-fast: false
+      matrix:
+        repository: [cyb3rjak3/alpine-pypy", "cyb3rjak3/python-2.7.18", "cyb3rjak3/alpine-pypy"]
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Docker Hub Description
+        uses: peter-evans/dockerhub-description@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_PASSWORD }}
+          repository: ${{ matrix.repository }}

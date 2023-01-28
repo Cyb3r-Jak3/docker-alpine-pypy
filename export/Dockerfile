@@ -8,8 +8,8 @@ ENV PYTHONIOENCODING=UTF-8
 ENV GPG_KEY=44FE09DEE9E9EC21EF903F06CA614AB6BD73BB06
 
 # Download the source
-ARG PYPY_VERSION=7.3.11
 ARG PYPY_BASE=3.9
+ARG PYPY_VERSION=7.3.11
 
 RUN set -ex; \
     apk add --no-cache --virtual .fetch-deps \
@@ -37,20 +37,20 @@ RUN set -ex; \
         | xargs -rt apk add --virtual .pypy-rundeps && \
     apk del findutils && \
     \
-    pypy3 --version
+    pypy --version
 
 # if this is called "PIP_VERSION", pip explodes with "ValueError: invalid truth value '<VERSION>'"
 ENV PYTHON_PIP_VERSION 20.0.2
-
+ARG PIP_URL=https://bootstrap.pypa.io/get-pip.py
 RUN set -ex; \
     \
-    wget -O get-pip.py 'https://bootstrap.pypa.io/get-pip.py' && \
+    wget -O get-pip.py "${PIP_URL}" && \
     \
-    pypy3 get-pip.py \
+    pypy get-pip.py \
         --disable-pip-version-check \
         --no-cache-dir \
         "pip==$PYTHON_PIP_VERSION" setuptools wheel && \
     pip --version && \
     rm -f get-pip.py
 
-CMD ["pypy3"]
+CMD ["pypy"]
