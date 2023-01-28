@@ -14,6 +14,9 @@ on:
 jobs:
   Publish:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
     strategy:
       fail-fast: false
       matrix:
@@ -21,28 +24,20 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      # - name: Login to Docker
-      #   uses: docker/login-action@v2
-      #   if: ${{ startsWith(github.ref, 'refs/tags/v') }}
-      #   with:
-      #     username: ${{ secrets.DOCKER_USERNAME }}
-      #     password: ${{ secrets.DOCKER_PASSWORD }}
+      - name: Login to Docker
+        uses: docker/login-action@v2
+        if: ${{ github.ref == 'refs/heads/main' }}
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
 
-      # - name: Login To GitHub
-      #   uses: docker/login-action@v2
-      #   if: ${{ startsWith(github.ref, 'refs/tags/v') }}
-      #   with:
-      #     registry: ghcr.io
-      #     username: ${{ github.repository_owner }}
-      #     password: ${{ secrets.CR_PAT }}
-
-      # - name: Login To GitLab
-      #   uses: docker/login-action@v2
-      #   if: ${{ startsWith(github.ref, 'refs/tags/v') }}
-      #   with:
-      #     registry: registry.gitlab.com
-      #     username: ${{ secrets.GITLAB_USER }}
-      #     password: ${{ secrets.GITLAB_TOKEN }}
+      - name: Login To GitHub
+        uses: docker/login-action@v2
+        if: ${{ github.ref == 'refs/heads/main' }}
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Docker Meta
         id: meta
@@ -57,19 +52,19 @@ jobs:
             org.opencontainers.image.vendor=cyb3rjak3
 
       - name: Set up QEMU
-        uses: docker/setup-qemu-action@v2.1.0
+        uses: docker/setup-qemu-action@v2
 
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2.2.1
+        uses: docker/setup-buildx-action@v2
 
       - name: Build ${{ matrix.target }}
-        uses: docker/bake-action@v2.3.0
+        uses: docker/bake-action@v2
         with:
           files: |
             ${{ steps.meta.outputs.bake-file }}
             ./docker-bake.hcl
           targets: ${{ matrix.target }}-release
-          push: ${{ startsWith(github.ref, 'refs/tags/v') }}
+          push: ${{ github.ref == 'refs/heads/main' }}
           set: |
             *.cache-from=type=gha,scope=buildx-${{ matrix.target }}
             *.cache-to=type=gha,mode=max,scope=buildx-${{ matrix.target }}
