@@ -55,7 +55,7 @@ jobs:
           cache-from: type=gha,scope=buildx-alpine-pypy-builder:${{ env.PYPY_BASE }}-v${{ env.PYPY_VERSION }}
 
   Build:
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
     name: Run Container
     needs: Prep
     container:
@@ -63,7 +63,7 @@ jobs:
         username: ${{ github.repository_owner }}
         password: ${{ secrets.GITHUB_TOKEN }}
       image: ghcr.io/cyb3r-jak3/alpine-pypy-builder:3.9-v7.3.11-${{ github.sha }}
-      options: --platform linux/amd64
+      # options: --platform linux/amd64
     steps:
       - name: Run Build
         run: /build.sh
