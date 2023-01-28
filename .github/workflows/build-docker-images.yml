@@ -68,3 +68,23 @@ jobs:
           set: |
             *.cache-from=type=gha,scope=buildx-${{ matrix.target }}
             *.cache-to=type=gha,mode=max,scope=buildx-${{ matrix.target }}
+
+
+  Update-DockerHub:
+    runs-on: ubuntu-latest
+    name: Update DockerHub Descriptions
+    needs: Publish
+    if: github.ref == 'refs/heads/main'
+    strategy:
+      fail-fast: false
+      matrix:
+        repository: [cyb3rjak3/alpine-pypy", "cyb3rjak3/python-2.7.18", "cyb3rjak3/alpine-pypy"]
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Docker Hub Description
+        uses: peter-evans/dockerhub-description@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_PASSWORD }}
+          repository: ${{ matrix.repository }}
