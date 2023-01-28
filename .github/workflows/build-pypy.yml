@@ -46,12 +46,13 @@ jobs:
         with:
           context: "builder/"
           push: true
-          tags: ghcr.io/cyb3r-jak3/alpine-pypy-builder:${{ env.PYPY_BASE }}-v${{ env.PYPY_VERSION }}-bootstrap-${{ github.sha }}
+          tags: ghcr.io/cyb3r-jak3/alpine-pypy-builder:${{ env.PYPY_BASE }}-v${{ env.PYPY_VERSION }}-${{ github.sha }}
           build-args: |
             PYPY_BASE=${{ env.PYPY_BASE }}
+            BUILD_IMAGE=cyb3rjak3/alpine-pypy:2.7-7.3.11-3.17
           platforms: linux/amd64,linux/arm64/v8
-          cache-to: type=gha,mode=max,scope=buildx-alpine-pypy-builder:${{ env.PYPY_BASE }}-v${{ env.PYPY_VERSION }}-bootstrap
-          cache-from: type=gha,scope=buildx-alpine-pypy-builder:${{ env.PYPY_BASE }}-v${{ env.PYPY_VERSION }}-bootstrap
+          cache-to: type=gha,mode=max,scope=buildx-alpine-pypy-builder:${{ env.PYPY_BASE }}-v${{ env.PYPY_VERSION }}
+          cache-from: type=gha,scope=buildx-alpine-pypy-builder:${{ env.PYPY_BASE }}-v${{ env.PYPY_VERSION }}
 
   Build:
     runs-on: self-hosted
@@ -61,7 +62,7 @@ jobs:
       credentials:
         username: ${{ github.repository_owner }}
         password: ${{ secrets.GITHUB_TOKEN }}
-      image: ghcr.io/cyb3r-jak3/alpine-pypy-builder:3.9-v7.3.11-bootstrap-${{ github.sha }}
+      image: ghcr.io/cyb3r-jak3/alpine-pypy-builder:3.9-v7.3.11-${{ github.sha }}
       options: --platform linux/amd64
     steps:
       - name: Run Build

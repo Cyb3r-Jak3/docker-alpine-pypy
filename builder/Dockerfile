@@ -2,7 +2,6 @@ ARG BUILD_IMAGE=cyb3rjak3/python-2.7.18:3.17
 FROM ${BUILD_IMAGE}
 
 ARG PYPY_BASE
-
 # Add build dependencies
 RUN apk add --no-cache --virtual .build-deps \
         bzip2-dev \
@@ -29,6 +28,9 @@ RUN pip install --no-cache-dir pycparser
 # Download the source
 ARG PYPY_VERSION=7.3.11
 ARG PYPY_SHA256SUM=b0f3166fb2a5aadfd5ceb9db5cdd5f7929a0eccca02b4a26c0dae0492f7ca8ea
+
+ENV PYPY_VERSION=${PYPY_VERSION}
+ENV PYPY_BASE=${PYPY_BASE}
 
 RUN set -ex; \
     wget -O pypy.tar.bz2 "https://downloads.python.org/pypy/pypy${PYPY_BASE}-v${PYPY_VERSION}-src.tar.bz2"; \
