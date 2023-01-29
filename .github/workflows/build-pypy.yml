@@ -10,17 +10,12 @@ on:
   workflow_dispatch:
 
 env:
-  PYPY_BASE: 3.9
-  PYPY_VERSION: 7.3.11
+  ALPINE_VERSION: 3.17
 
 jobs:
   Prep:
     runs-on: ubuntu-latest
     name: Prep Docker Container
-    permissions:
-      contents: read
-      packages: write
-
     steps:
 
       - name: Login To GitHub
@@ -41,35 +36,59 @@ jobs:
       - name: Chmox build script
         run: chmod +x builder/build.sh
 
-      - name: Build and push Docker image
+      - name: Build Docker image
         uses: docker/build-push-action@v3
         with:
           context: "builder/"
-          push: true
-          tags: ghcr.io/cyb3r-jak3/alpine-pypy-builder:${{ env.PYPY_BASE }}-v${{ env.PYPY_VERSION }}-${{ github.sha }}
+          tags: alpine-pypy-builder:${{ env.ALPINE_VERSION }}-${{ github.sha }}
           build-args: |
-            PYPY_BASE=${{ env.PYPY_BASE }}
             BUILD_IMAGE=cyb3rjak3/alpine-pypy:2.7-7.3.11-3.17
-          platforms: linux/amd64,linux/arm64/v8
-          cache-to: type=gha,mode=max,scope=buildx-alpine-pypy-builder:${{ env.PYPY_BASE }}-v${{ env.PYPY_VERSION }}
-          cache-from: type=gha,scope=buildx-alpine-pypy-builder:${{ env.PYPY_BASE }}-v${{ env.PYPY_VERSION }}
+          cache-to: type=gha,mode=max,scope=buildx-alpine-pypy-builder:${{ env.ALPINE_VERSION }}-${{ github.sha }}
+          cache-from: type=gha,scope=buildx-alpine-pypy-builder:${{ env.ALPINE_VERSION }}-${{ github.sha }}
+          outputs: type=oci,dest=/tmp/image.tar
+      
+      - name: Upload artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: builder_image
+          path: /tmp/image.tar
 
   Build:
     runs-on: ubuntu-latest
     name: Run Container
     needs: Prep
-    container:
-      credentials:
-        username: ${{ github.repository_owner }}
-        password: ${{ secrets.GITHUB_TOKEN }}
-      image: ghcr.io/cyb3r-jak3/alpine-pypy-builder:3.9-v7.3.11-${{ github.sha }}
-      # options: --platform linux/amd64
+    strategy:
+      fail-fast: true
+      matrix:
+        PYPY_BASE: ["2.7", "3.8", "3.9"]
+        PYPY_VERSION: ["7.3.11"]
+        PYPY_SHA256SUM: [""]
+        include:
+          - PYPY_BASE: "2.7"
+            PYPY_VERSION: "7.3.11"
+            PYPY_SHA256SUM: "1117afb66831da4ea6f39d8d2084787a74689fd0229de0be301f9ed9b255093c"
+          - PYPY_BASE: "3.8"
+            PYPY_VERSION: "7.3.11"
+            PYPY_SHA256SUM: "4d6769bfca73734e8666fd70503b7ceb06a6e259110e617331bb3899ca4e6058"
+          - PYPY_BASE: "3.9"
+            PYPY_VERSION: "7.3.11"
+            PYPY_SHA256SUM: "b0f3166fb2a5aadfd5ceb9db5cdd5f7929a0eccca02b4a26c0dae0492f7ca8ea"
     steps:
+      - name: Download builder image from previous workflow
+        uses: actions/download-artifact@v2
+        with:
+          name: builder_image
+          path: /tmp/image.tar
+
+      - name: Load Docker images from previous workflows
+        run: |
+          docker load --input /tmp/image.tar
+
       - name: Run Build
-        run: /build.sh
+        run: docker run -v $(pwd)/tmp:/tmp -e PYPY_BASE=${{ matrix.PYPY_BASE }} -e PYPY_VERSION=${{ matrix.PYPY_VERSION }} -e PYPY_SHA256SUM=${{ matrix.PYPY_SHA256SUM }} alpine-pypy-builder:${{ env.ALPINE_VERSION }}-${{ github.sha }}
 
       - name: Upload PyPy to Artifacts
         uses: actions/upload-artifact@v3
         with:
-          name: pypy${{ env.PYPY_BASE }}-v${{ env.PYPY_VERSION }}
-          path: /tmp/usession-release-pypy${{ env.PYPY_BASE }}-v${{ env.PYPY_VERSION }}-1/build/**.tar.bz2
+          name: pypy${{ matrix.PYPY_BASE }}-v${{ matrix.PYPY_VERSION }}
+          path: ./tmp/usession-release-pypy${{ matrix.PYPY_BASE }}-v${{ matrix.PYPY_VERSION }}-1/build/**.tar.bz2
