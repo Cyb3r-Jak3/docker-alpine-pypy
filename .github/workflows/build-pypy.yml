@@ -33,7 +33,7 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2.2.1
 
-      - name: Chmox build script
+      - name: Chmod build script
         run: chmod +x builder/build.sh
 
       - name: Build Docker image
@@ -80,12 +80,12 @@ jobs:
           path: /tmp/image.tar
 
       - name: Display structure of downloaded files
-        run: ls -Rla
+        run: pwd && ls -Rla
         working-directory: /tmp/image.tar
 
       - name: Load Docker images from previous workflows
         run: |
-          docker load --input /tmp/image.tar
+          docker load --input /tmp/image.tar/image.tar
 
       - name: Run Build
         run: docker run -v $(pwd)/tmp:/tmp -e PYPY_BASE=${{ matrix.PYPY_BASE }} -e PYPY_VERSION=${{ matrix.PYPY_VERSION }} -e PYPY_SHA256SUM=${{ matrix.PYPY_SHA256SUM }} alpine-pypy-builder:${{ env.ALPINE_VERSION }}-${{ github.sha }}

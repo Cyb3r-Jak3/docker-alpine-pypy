@@ -53,10 +53,6 @@ target "python-2_7" {
         "cyb3rjak3/python-2.7.18:3.17",
         "ghcr.io/cyb3r-jak3/python-2.7.18:3.17"
     ]
-    platforms = [
-        "linux/amd64",
-        "linux/arm64",
-    ]
 }
 
 target "alpine-pypy-release" {
