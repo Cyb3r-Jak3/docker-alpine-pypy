@@ -78,13 +78,11 @@ jobs:
           name: builder_image
           path: /tmp/image.tar
 
-      - name: Display structure of downloaded files
-        run: pwd && ls -Rla
-        working-directory: /tmp/image.tar
-
       - name: Load Docker images from previous workflows
-        run: |
-          docker load --input /tmp/image.tar/image.tar
+        run: docker load --input /tmp/image.tar/image.tar
+
+      - name: Debug image loading
+        run: docker images
 
       - name: Run Build
         run: |
