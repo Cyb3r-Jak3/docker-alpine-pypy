@@ -52,6 +52,8 @@ jobs:
         with:
           name: builder_image
           path: /tmp/image.tar
+          if-no-files-found: error
+          retention-days: 1
 
   Build:
     runs-on: ubuntu-latest
@@ -65,13 +67,10 @@ jobs:
         include:
           - PYPY_BASE: "2.7"
             PYPY_VERSION: "7.3.11"
-            PYPY_SHA256SUM: "1117afb66831da4ea6f39d8d2084787a74689fd0229de0be301f9ed9b255093c"
           - PYPY_BASE: "3.8"
             PYPY_VERSION: "7.3.11"
-            PYPY_SHA256SUM: "4d6769bfca73734e8666fd70503b7ceb06a6e259110e617331bb3899ca4e6058"
           - PYPY_BASE: "3.9"
             PYPY_VERSION: "7.3.11"
-            PYPY_SHA256SUM: "b0f3166fb2a5aadfd5ceb9db5cdd5f7929a0eccca02b4a26c0dae0492f7ca8ea"
     steps:
       - name: Download builder image from previous workflow
         uses: actions/download-artifact@v3
@@ -88,7 +87,10 @@ jobs:
           docker load --input /tmp/image.tar/image.tar
 
       - name: Run Build
-        run: docker run -v $(pwd)/tmp:/tmp -e PYPY_BASE=${{ matrix.PYPY_BASE }} -e PYPY_VERSION=${{ matrix.PYPY_VERSION }} -e PYPY_SHA256SUM=${{ matrix.PYPY_SHA256SUM }} alpine-pypy-builder:${{ env.ALPINE_VERSION }}-${{ github.sha }}
+        run: |
+          PYPY_SHA256SUM=$(curl -s https://api.cyberjake.xyz/pypy/checksums/pypy${{ matrix.PYPY_BASE }}-v${{ matrix.PYPY_VERSION }}-src.tar.bz2 | jq .results.checksum)
+          echo "${PYPY_SHA256SUM}"
+          docker run -v $(pwd)/tmp:/tmp -e PYPY_BASE=${{ matrix.PYPY_BASE }} -e PYPY_VERSION=${{ matrix.PYPY_VERSION }} -e PYPY_SHA256SUM="${PYPY_SHA256SUM}" alpine-pypy-builder:${{ env.ALPINE_VERSION }}-${{ github.sha }}
 
       - name: Upload PyPy to Artifacts
         uses: actions/upload-artifact@v3
