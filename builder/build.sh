@@ -22,7 +22,7 @@ fi
 
 
 wget -O pypy.tar.bz2 "https://downloads.python.org/pypy/pypy${PYPY_BASE}-v${PYPY_VERSION}-src.tar.bz2"
-echo "$PYPY_SHA256SUM *pypy.tar.bz2" | sha256sum -c -
+echo "${PYPY_SHA256SUM} *pypy.tar.bz2" | sha256sum -c -
 mkdir -p /usr/src/pypy
 tar -xjC /usr/src/pypy --strip-components=1 -f pypy.tar.bz2
 rm pypy.tar.bz2

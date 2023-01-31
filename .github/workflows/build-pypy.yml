@@ -81,12 +81,9 @@ jobs:
       - name: Load Docker images from previous workflows
         run: docker load --input /tmp/image.tar/image.tar
 
-      - name: Debug image loading
-        run: docker images
-
       - name: Run Build
         run: |
-          PYPY_SHA256SUM=$(curl -s https://api.cyberjake.xyz/pypy/checksums/pypy${{ matrix.PYPY_BASE }}-v${{ matrix.PYPY_VERSION }}-src.tar.bz2 | jq .results.checksum)
+          PYPY_SHA256SUM=$(curl -s https://api.cyberjake.xyz/pypy/checksums/pypy${{ matrix.PYPY_BASE }}-v${{ matrix.PYPY_VERSION }}-src.tar.bz2 | jq --raw-output .results.checksum)
           echo "${PYPY_SHA256SUM}"
           docker run -v $(pwd)/tmp:/tmp -e PYPY_BASE=${{ matrix.PYPY_BASE }} -e PYPY_VERSION=${{ matrix.PYPY_VERSION }} -e PYPY_SHA256SUM="${PYPY_SHA256SUM}" alpine-pypy-builder:${{ env.ALPINE_VERSION }}-${{ github.sha }}
 
