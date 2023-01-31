@@ -45,7 +45,7 @@ jobs:
             BUILD_IMAGE=cyb3rjak3/alpine-pypy:2.7-7.3.11-3.17
           cache-to: type=gha,mode=max,scope=buildx-alpine-pypy-builder:${{ env.ALPINE_VERSION }}-${{ github.sha }}
           cache-from: type=gha,scope=buildx-alpine-pypy-builder:${{ env.ALPINE_VERSION }}-${{ github.sha }}
-          outputs: type=oci,dest=/tmp/image.tar
+          outputs: type=docker,dest=/tmp/image.tar
       
       - name: Upload artifact
         uses: actions/upload-artifact@v2
