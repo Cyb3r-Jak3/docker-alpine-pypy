@@ -44,18 +44,18 @@ GPG Signature:
 Where:
 
 - `$PYPY_BASE`: Version of base pypy (e.g. `2.7`, `3.9`)
-- `$FILENAME`: Built filename (e.g. `pypy3.9-v7.3.11-linux64-alpine.tar.bz2`)
+- `$FILENAME`: Built filename (e.g. `pypy3.9-v7.3.11-linux-x86_64-alpine.tar.bz2`)
 
 Example:
 
-PyPy: 3.9-7.3.11 and Alpine: 3.17 generate a link of `https://pypy.cyberjake.xyz/pypy/3.9/pypy3.9-v7.3.11-linux64-alpine.tar.bz2` for PyPy download and `https://pypy.cyberjake.xyz/pypy/3.9/pypy3.9-v7.3.11-linux64-alpine.tar.bz2.sig` for signature download.
+PyPy: 3.9-7.3.11 and Alpine: 3.17 generate a link of `https://pypy.cyberjake.xyz/pypy/3.9/pypy3.9-v7.3.11-linux-x86_64-alpine.tar.bz2` for PyPy download and `https://pypy.cyberjake.xyz/pypy/3.9/pypy3.9-v7.3.11-linux64-alpine.tar.bz2.sig` for signature download.
 
 ### Available Versions
 
-| PyPy Base | PyPy Version | Alpine Version |
-|-----------|--------------|----------------|
-| 3.9       | 7.3.11       | 3.17           |
-| 3.8       | 7.3.11       | 3.17           |
-| 2.7       | 7.3.11       | 3.17           |
+| PyPy Base | PyPy Version | Alpine Version |  Arch  |
+|-----------|--------------|----------------|--------|
+| 3.9       | 7.3.11       | 3.17           | x86_64 |
+| 3.8       | 7.3.11       | 3.17           | x86_64 |
+| 2.7       | 7.3.11       | 3.17           | x86_64 |
 
 Please make an issue if you want to see a specific version.
