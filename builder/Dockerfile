@@ -28,7 +28,9 @@ RUN pip install --no-cache-dir pycparser
 WORKDIR /usr/src/pypy
 
 COPY build.sh /build.sh
+
 RUN chmod +x /build.sh
+
 CMD ["/build.sh"]
 
 VOLUME /tmp

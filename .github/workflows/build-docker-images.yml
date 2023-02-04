@@ -10,6 +10,9 @@ on:
       - '.github/workflows/build-docker-images.yml'
       - 'docker-bake.hcl'
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   Publish:

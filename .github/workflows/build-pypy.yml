@@ -12,6 +12,10 @@ on:
 env:
   ALPINE_VERSION: 3.17
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   Prep:
     runs-on: ubuntu-latest

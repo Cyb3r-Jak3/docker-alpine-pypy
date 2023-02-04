@@ -5,13 +5,6 @@ target "docker-metadata-action" {
     ]
 }
 
-target "alpine-pypy-3_9" {
-    context = "./export"
-    tags = [
-        "cyb3rjak3/alpine-pypy:3.9-7.3.11-3.17",
-        "ghcr.io/cyb3r-jak3/alpine-pypy:3.9-7.3.11-3.17"
-    ]
-}
 
 target "alpine-pypy-2_7" {
     context = "./export"
@@ -23,6 +16,26 @@ target "alpine-pypy-2_7" {
     tags = [
         "cyb3rjak3/alpine-pypy:2.7-7.3.11-3.17",
         "ghcr.io/cyb3r-jak3/alpine-pypy:2.7-7.3.11-3.17"
+    ]
+}
+
+target "alpine-pypy-3_8" {
+    context = "./export"
+    args = {
+        PYPY_BASE = "3.8"
+    }
+
+    tags = [
+        "cyb3rjak3/alpine-pypy:3.8-7.3.11-3.17",
+        "ghcr.io/cyb3r-jak3/alpine-pypy:3.8-7.3.11-3.17"
+    ]
+}
+
+target "alpine-pypy-3_9" {
+    context = "./export"
+    tags = [
+        "cyb3rjak3/alpine-pypy:3.9-7.3.11-3.17",
+        "ghcr.io/cyb3r-jak3/alpine-pypy:3.9-7.3.11-3.17"
     ]
 }
 
@@ -55,12 +68,32 @@ target "python-2_7" {
     ]
 }
 
+target "alpine-pypy-2_7-release" {
+    inherits = ["docker-metadata-action", "alpine-pypy-2_7"]
+}
+
+target "alpine-pypy-3_8-release" {
+    inherits = ["docker-metadata-action", "alpine-pypy-3_8"]
+}
+
+target "alpine-pypy-3_9-release" {
+    inherits = ["docker-metadata-action", "alpine-pypy-3_9"]
+}
+
 target "alpine-pypy-release" {
-    inherits = ["docker-metadata-action", "alpine-pypy-2_7", "alpine-pypy-3_9"]
+    targets = ["alpine-pypy-2_7-release", "alpine-pypy-3_8-release", "alpine-pypy-3_9-release"]
 }
 
 target "alpine-pypy-builder-release" {
-    inherits = ["docker-metadata-action", "alpine-pypy-builder", "alpine-pypy-builder-bootstrap"]
+    inherits = ["docker-metadata-action", "alpine-pypy-builder", ]
+}
+
+target "alpine-pypy-builder-bootstrap-release" {
+    inherits = ["docker-metadata-action", "alpine-pypy-builder-bootstrap"]
+}
+
+target "alpine-pypy-builder-release" {
+    targets = ["alpine-pypy-builder-release", "alpine-pypy-builder-bootstrap-release"]
 }
 
 target "python-2_7-release" {
