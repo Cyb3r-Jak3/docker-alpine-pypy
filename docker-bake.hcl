@@ -42,7 +42,7 @@ target "alpine-pypy-3_9" {
 target "alpine-pypy-builder" {
     context = "./builder"
     args = {
-        BUILD_IMAGE = "cyb3rjak3/alpine-pypy:2.7-7.3.11-3.17"
+        BUILD_IMAGE = "ghcr.io/cyb3r-jak3/alpine-pypy:2.7-7.3.11-3.17"
     }
 
     tags = [

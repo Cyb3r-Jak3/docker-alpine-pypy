@@ -1,4 +1,4 @@
-ARG BUILD_IMAGE=cyb3rjak3/python-2.7.18:3.17
+ARG BUILD_IMAGE=ghcr.io/cyb3r-jak3/python-2.7.18:3.17
 FROM ${BUILD_IMAGE}
 
 # ARG PYPY_BASE

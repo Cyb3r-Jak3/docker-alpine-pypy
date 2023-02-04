@@ -81,7 +81,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        repository: [cyb3rjak3/alpine-pypy", "cyb3rjak3/python-2.7.18", "cyb3rjak3/alpine-pypy"]
+        repository: ["cyb3rjak3/alpine-pypy", "cyb3rjak3/python-2.7.18", "cyb3rjak3/alpine-pypy"]
     steps:
       - uses: actions/checkout@v3
 
