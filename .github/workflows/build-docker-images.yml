@@ -10,6 +10,12 @@ on:
       - '.github/workflows/build-docker-images.yml'
       - 'docker-bake.hcl'
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  DOCKER_USERNAME: cyb3rjak3
 
 jobs:
   Publish:
@@ -17,7 +23,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        target: ["python-2_7", "alpine-pypy", "alpine-pypy-builder"]
+        target: ["python-2_7", "alpine-pypy-builder", "alpine-pypy-builder-bootstrap", "alpine-pypy-2_7", "alpine-pypy-3_8", "alpine-pypy-3_9"]
     steps:
       - uses: actions/checkout@v3
 
@@ -25,7 +31,7 @@ jobs:
         uses: docker/login-action@v2
         if: ${{ github.ref == 'refs/heads/main' }}
         with:
-          username: ${{ secrets.DOCKER_USERNAME }}
+          username: ${{ env.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Login To GitHub
@@ -82,6 +88,6 @@ jobs:
       - name: Docker Hub Description
         uses: peter-evans/dockerhub-description@v3
         with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          username: ${{ env.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
           repository: ${{ matrix.repository }}
