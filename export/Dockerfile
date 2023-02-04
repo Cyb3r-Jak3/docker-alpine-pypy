@@ -16,7 +16,7 @@ RUN set -ex; \
         gnupg \
         tar \
         xz && \
-    FILENAME="pypy${PYPY_BASE}-v${PYPY_VERSION}-linux64-alpine$(cut -d '.' -f 1,2 /etc/alpine-release).tar.bz2" && \
+    FILENAME="pypy${PYPY_BASE}-v${PYPY_VERSION}-linux64-alpine.tar.bz2" && \
     wget -O pypy.tar.bz2 "https://pypy.cyberjake.xyz/pypy/${PYPY_BASE}/${FILENAME}" && \
     wget -O pypy.tar.bz2.sig "https://pypy.cyberjake.xyz/pypy/${PYPY_BASE}/${FILENAME}.sig" && \
     export GNUPGHOME="$(mktemp -d)" && \

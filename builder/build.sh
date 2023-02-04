@@ -32,7 +32,7 @@ PYTHON="$(which pypy || which python)"
 
 PYPY_NAME="pypy${PYPY_BASE}"
 PYPY_RELEASE_VERSION="${PYPY_RELEASE_VERSION:-$PYPY_VERSION}"
-PYPY_ARCH="linux64-alpine$(cut -d. -f1,2 /etc/alpine-release)"
+PYPY_ARCH="linux64-alpine"
 
 # set thread stack size to 1MB so we don't segfault before we hit sys.getrecursionlimit()
 # https://github.com/alpinelinux/aports/commit/2026e1259422d4e0cf92391ca2d3844356c649d0
