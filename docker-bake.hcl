@@ -80,20 +80,12 @@ target "alpine-pypy-3_9-release" {
     inherits = ["docker-metadata-action", "alpine-pypy-3_9"]
 }
 
-target "alpine-pypy-release" {
-    targets = ["alpine-pypy-2_7-release", "alpine-pypy-3_8-release", "alpine-pypy-3_9-release"]
-}
-
 target "alpine-pypy-builder-release" {
     inherits = ["docker-metadata-action", "alpine-pypy-builder", ]
 }
 
 target "alpine-pypy-builder-bootstrap-release" {
     inherits = ["docker-metadata-action", "alpine-pypy-builder-bootstrap"]
-}
-
-target "alpine-pypy-builder-release" {
-    targets = ["alpine-pypy-builder-release", "alpine-pypy-builder-bootstrap-release"]
 }
 
 target "python-2_7-release" {
