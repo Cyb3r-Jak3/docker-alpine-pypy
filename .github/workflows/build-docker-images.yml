@@ -81,7 +81,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        repository: ["cyb3rjak3/alpine-pypy", "cyb3rjak3/python-2.7.18", "cyb3rjak3/alpine-pypy"]
+        repository: ["alpine-pypy", "python-2.7.18", "alpine-pypy-builder"]
     steps:
       - uses: actions/checkout@v3
 
@@ -90,4 +90,4 @@ jobs:
         with:
           username: ${{ env.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
-          repository: ${{ matrix.repository }}
+          repository: "${{ env.DOCKER_USERNAME }}/${{ matrix.repository }}"
