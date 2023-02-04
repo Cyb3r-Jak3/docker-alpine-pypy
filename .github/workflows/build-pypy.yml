@@ -36,10 +36,11 @@ jobs:
           context: "builder/"
           tags: alpine-pypy-builder:${{ env.ALPINE_VERSION }}-${{ github.sha }}
           build-args: |
-            BUILD_IMAGE=cyb3rjak3/alpine-pypy:2.7-7.3.11-3.17
+            BUILD_IMAGE=ghcr.io/cyb3r-jak3/alpine-pypy:2.7-7.3.11-3.17
           cache-to: type=gha,mode=max,scope=buildx-alpine-pypy-builder:${{ env.ALPINE_VERSION }}-${{ github.sha }}
           cache-from: type=gha,scope=buildx-alpine-pypy-builder:${{ env.ALPINE_VERSION }}-${{ github.sha }}
           outputs: type=docker,dest=/tmp/image.tar
+          platform: linux/amd64, linux/arm64
       
       - name: Upload artifact
         uses: actions/upload-artifact@v3
@@ -58,8 +59,15 @@ jobs:
       matrix:
         PYPY_BASE: ["2.7", "3.8", "3.9"]
         PYPY_VERSION: ["7.3.11"]
+        PLATFORM: ["amd64", "arm64"]
 
     steps:
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v2.1.0
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2.2.1
+
       - name: Download builder image from previous workflow
         uses: actions/download-artifact@v3
         with:
@@ -73,10 +81,10 @@ jobs:
         run: |
           PYPY_SHA256SUM=$(curl -s https://api.cyberjake.xyz/pypy/checksums/pypy${{ matrix.PYPY_BASE }}-v${{ matrix.PYPY_VERSION }}-src.tar.bz2 | jq --raw-output .results.checksum)
           echo "${PYPY_SHA256SUM}"
-          docker run -v $(pwd)/tmp:/tmp -e PYPY_BASE=${{ matrix.PYPY_BASE }} -e PYPY_VERSION=${{ matrix.PYPY_VERSION }} -e PYPY_SHA256SUM="${PYPY_SHA256SUM}" alpine-pypy-builder:${{ env.ALPINE_VERSION }}-${{ github.sha }}
+          docker run --platform linux/${{ matrix.PLATFORM }}  -v $(pwd)/tmp:/tmp -e PYPY_BASE=${{ matrix.PYPY_BASE }} -e PYPY_VERSION=${{ matrix.PYPY_VERSION }} -e PYPY_SHA256SUM="${PYPY_SHA256SUM}" alpine-pypy-builder:${{ env.ALPINE_VERSION }}-${{ github.sha }}
 
       - name: Upload PyPy to Artifacts
         uses: actions/upload-artifact@v3
         with:
-          name: pypy
+          name: pypy-${{ matrix.PLATFORM }} 
           path: ./tmp/usession-release-pypy${{ matrix.PYPY_BASE }}-v${{ matrix.PYPY_VERSION }}-1/build/**.tar.bz2
