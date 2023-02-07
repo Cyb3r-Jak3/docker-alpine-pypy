@@ -82,8 +82,8 @@ jobs:
       #     name: builder_image
       #     path: /tmp/image.tar
 
-      - name: Load Docker images from previous workflows
-        run: docker load --input /tmp/image.tar/image.tar
+      # - name: Load Docker images from previous workflows
+      #   run: docker load --input /tmp/image.tar/image.tar
 
       - name: Run Build
         run: |
