@@ -17,6 +17,10 @@ target "alpine-pypy-2_7" {
         "cyb3rjak3/alpine-pypy:2.7-7.3.11-3.17",
         "ghcr.io/cyb3r-jak3/alpine-pypy:2.7-7.3.11-3.17"
     ]
+    platforms = [
+        "linux/amd64",
+        "linux/arm64"
+    ]
 }
 
 target "alpine-pypy-3_8" {
@@ -49,6 +53,10 @@ target "alpine-pypy-builder" {
         "cyb3rjak3/alpine-pypy-builder:3.17",
         "ghcr.io/cyb3r-jak3/alpine-pypy-builder:3.17"
     ]
+    platforms = [
+        "linux/amd64",
+        "linux/arm64"
+    ]
 }
 
 target "alpine-pypy-builder-bootstrap" {
@@ -57,6 +65,10 @@ target "alpine-pypy-builder-bootstrap" {
     tags = [
         "cyb3rjak3/alpine-pypy-builder:3.17-bootstrap",
         "ghcr.io/cyb3r-jak3/alpine-pypy-builder:3.17-bootstrap"
+    ]
+    platforms = [
+        "linux/amd64",
+        "linux/arm64"
     ]
 }
 
@@ -90,4 +102,8 @@ target "alpine-pypy-builder-bootstrap-release" {
 
 target "python-2_7-release" {
     inherits = ["docker-metadata-action", "python-2_7"]
+    platforms = [
+        "linux/amd64",
+        "linux/arm64"
+    ]
 }
