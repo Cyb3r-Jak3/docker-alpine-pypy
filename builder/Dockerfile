@@ -23,7 +23,7 @@ RUN apk add --no-cache --virtual .build-deps \
         xz-dev \
         zlib-dev
 
-RUN pip install --no-cache-dir pycparser
+RUN pip install --no-cache-dir --disable-pip-version-check pycparser
 
 WORKDIR /usr/src/pypy
 

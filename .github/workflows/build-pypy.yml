@@ -86,10 +86,10 @@ jobs:
         env:
           RUNS_ON: ${{ matrix.RUNNER }}
         run: |
-          if [ $RUNS_ON = "docker-arm" ]; then
-              echo "ARCH=linux/arm64" >> $GITHUB_ENV
+          if [ $RUNS_ON = "self-hosted" ]; then
+              echo "ARCH=arm64" >> $GITHUB_ENV
           else
-              echo "ARCH=linux/amd64" >> $GITHUB_ENV
+              echo "ARCH=amd64" >> $GITHUB_ENV
           fi
 
       - name: Run Build
