@@ -54,17 +54,9 @@ jobs:
           cache-from: type=gha,scope=buildx-alpine-pypy-builder:${{ env.ALPINE_VERSION }}-${{ github.sha }}
           platforms: linux/amd64, linux/arm64
           push: true
-      
-      # - name: Upload artifact
-      #   uses: actions/upload-artifact@v3
-      #   with:
-      #     name: builder_image
-      #     path: /tmp/image.tar
-      #     if-no-files-found: error
-      #     retention-days: 1
 
   Build:
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.RUNNER }}
     name: Run Container
     needs: Prep
     strategy:
@@ -72,7 +64,8 @@ jobs:
       matrix:
         PYPY_BASE: ["2.7", "3.8", "3.9"]
         PYPY_VERSION: ["7.3.11"]
-        PLATFORM: ["amd64", "arm64"]
+        RUNNER: ["self-hosted", "ubuntu-latest"]
+        # PLATFORM: ["amd64", "arm64"]
 
     steps:
 
@@ -89,20 +82,11 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
 
-      # - name: Download builder image from previous workflow
-      #   uses: actions/download-artifact@v3
-      #   with:
-      #     name: builder_image
-      #     path: /tmp/image.tar
-
-      # - name: Load Docker images from previous workflows
-      #   run: docker load --input /tmp/image.tar/image.tar
-
       - name: Run Build
         run: |
           PYPY_SHA256SUM=$(curl -s https://api.cyberjake.xyz/pypy/checksums/pypy${{ matrix.PYPY_BASE }}-v${{ matrix.PYPY_VERSION }}-src.tar.bz2 | jq --raw-output .results.checksum)
           echo "${PYPY_SHA256SUM}"
-          docker run --platform linux/${{ matrix.PLATFORM }}  -v $(pwd)/tmp:/tmp -e PYPY_BASE=${{ matrix.PYPY_BASE }} -e PYPY_VERSION=${{ matrix.PYPY_VERSION }} -e PYPY_SHA256SUM="${PYPY_SHA256SUM}" ${{ env.BUILDER_IMAGE_TAG }}:${{ env.ALPINE_VERSION }}-${{ github.sha }}
+          docker run --platform linux/${{ 'arm64' if matrix.RUNNER == 'self-hosted' else 'amd64' }}  -v $(pwd)/tmp:/tmp -e PYPY_BASE=${{ matrix.PYPY_BASE }} -e PYPY_VERSION=${{ matrix.PYPY_VERSION }} -e PYPY_SHA256SUM="${PYPY_SHA256SUM}" ${{ env.BUILDER_IMAGE_TAG }}:${{ env.ALPINE_VERSION }}-${{ github.sha }}
 
       - name: Upload PyPy to Artifacts
         uses: actions/upload-artifact@v3
