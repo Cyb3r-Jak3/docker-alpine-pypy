@@ -82,14 +82,24 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
 
+      - name: Select platform
+        env:
+          RUNS_ON: ${{ matrix.RUNNER }}
+        run: |
+          if [ $RUNS_ON = "docker-arm" ]; then
+              echo "ARCH=linux/arm64" >> $GITHUB_ENV
+          else
+              echo "ARCH=linux/amd64" >> $GITHUB_ENV
+          fi
+
       - name: Run Build
         run: |
           PYPY_SHA256SUM=$(curl -s https://api.cyberjake.xyz/pypy/checksums/pypy${{ matrix.PYPY_BASE }}-v${{ matrix.PYPY_VERSION }}-src.tar.bz2 | jq --raw-output .results.checksum)
           echo "${PYPY_SHA256SUM}"
-          docker run --platform linux/${{ 'arm64' if matrix.RUNNER == 'self-hosted' else 'amd64' }}  -v $(pwd)/tmp:/tmp -e PYPY_BASE=${{ matrix.PYPY_BASE }} -e PYPY_VERSION=${{ matrix.PYPY_VERSION }} -e PYPY_SHA256SUM="${PYPY_SHA256SUM}" ${{ env.BUILDER_IMAGE_TAG }}:${{ env.ALPINE_VERSION }}-${{ github.sha }}
+          docker run --platform linux/${{ env.ARCH }}  -v $(pwd)/tmp:/tmp -e PYPY_BASE=${{ matrix.PYPY_BASE }} -e PYPY_VERSION=${{ matrix.PYPY_VERSION }} -e PYPY_SHA256SUM="${PYPY_SHA256SUM}" ${{ env.BUILDER_IMAGE_TAG }}:${{ env.ALPINE_VERSION }}-${{ github.sha }}
 
       - name: Upload PyPy to Artifacts
         uses: actions/upload-artifact@v3
         with:
-          name: pypy-${{ matrix.PLATFORM }} 
+          name: pypy-${{ env.ARCH }} 
           path: ./tmp/usession-release-pypy${{ matrix.PYPY_BASE }}-v${{ matrix.PYPY_VERSION }}-1/build/**.tar.bz2
