@@ -1,7 +1,7 @@
+# Use bootstrap image by default
 ARG BUILD_IMAGE=ghcr.io/cyb3r-jak3/python-2.7.18:3.17
 FROM ${BUILD_IMAGE}
 
-# ARG PYPY_BASE
 # Add build dependencies
 RUN apk add --no-cache --virtual .build-deps \
         bzip2-dev \
@@ -23,7 +23,7 @@ RUN apk add --no-cache --virtual .build-deps \
         xz-dev \
         zlib-dev
 
-RUN pip install --no-cache-dir pycparser
+RUN pip install --no-cache-dir --disable-pip-version-check pycparser
 
 WORKDIR /usr/src/pypy
 
