@@ -9,7 +9,7 @@ ENV PYTHON_VERSION=2.7.18
 # Still download the release from python so show it hasn't been tampered with
 ENV GPG_KEY=44FE09DEE9E9EC21EF903F06CA614AB6BD73BB06
 
-RUN /bin/sh -c; apk add --update --no-cache ca-certificates
+RUN apk add --update --no-cache ca-certificates
 
 RUN /bin/sh -c set -ex 	&& apk add --no-cache --virtual .fetch-deps \
         gnupg \

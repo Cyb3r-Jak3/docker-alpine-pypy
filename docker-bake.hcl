@@ -60,6 +60,11 @@ target "alpine-pypy-builder-bootstrap" {
         "cyb3rjak3/alpine-pypy-builder:3.17-bootstrap",
         "ghcr.io/cyb3r-jak3/alpine-pypy-builder:3.17-bootstrap"
     ]
+    platforms = [
+        "linux/amd64",
+        "linux/arm64",
+        "linux/386"
+    ]
 }
 
 target "python-2_7" {
@@ -69,7 +74,9 @@ target "python-2_7" {
         "ghcr.io/cyb3r-jak3/python-2.7.18:3.17"
     ]
     platforms = [
-        "linux/amd64"
+        "linux/amd64",
+        "linux/arm64",
+        "linux/386"
     ]
 }
 
