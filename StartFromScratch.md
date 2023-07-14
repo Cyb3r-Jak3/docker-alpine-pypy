@@ -30,3 +30,15 @@ Command: `docker buildx bake alpine-pypy-builder` then you can run `docker run -
 ## Using with GitHub actions
 
 This project uses [GitHub Actions](https://docs.github.com/en/actions) to provider reliable, repeatable and public builds. All the docker images and PyPy artifacts are built here. Most things can run on the `ubuntu-latest` runner but if you are attempting to build PyPy for ARM64 then you will need an external runner because the builds will timeout. As of writing this Oracle offers a free tier that includes an arm VM [Read More](https://www.oracle.com/cloud/free/). This is used to build arm64 images for this project.
+
+### Adding New Architecture
+
+If you want to add a new architecture to this process you do the following:
+
+1. Edit [docker-bake.hcl](./docker-bake.hcl) and under the python image add the new platform. Then run `docker buildx bake python-2_7 --push`
+
+2. Then you can build the bootstrap image with `docker build --platform=<platform> -t <bootstrap image tag> --build-arg BUILD_IMAGE=<python image tag> .\builder\`
+
+3. Then you can build PyPy with `docker run -v ${PWD}/tmp:/tmp --platform <platform> -it -e PYPY_BASE=2.7 -e PYPY_VERSION=7.3.11 -e PYPY_SHA256SUM=1117afb66831da4ea6f39d8d2084787a74689fd0229de0be301f9ed9b255093c <bootstrap image tag>`
+
+You will then have PyPy which you can upload and use to make an image with the PyPy.

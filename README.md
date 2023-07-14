@@ -52,10 +52,13 @@ PyPy: 3.9-7.3.11 is `https://pypy.cyberjake.xyz/pypy/3.9/pypy3.9-v7.3.11-linux-x
 
 ### Available Versions
 
-| PyPy Base | PyPy Version | Alpine Version |       Arch       |
-|-----------|--------------|----------------|------------------|
-| 3.9       | 7.3.11       | 3.17           | x86_64 & aarch64 |
-| 3.8       | 7.3.11       | 3.17           | x86_64 & aarch64 |
-| 2.7       | 7.3.11       | 3.17           | x86_64 & aarch64 |
+| PyPy Base   | PyPy Version   | Alpine Version   |       Arch         |
+|:-----------:|:--------------:|:----------------:|:------------------:|
+| 3.10        | 7.3.12         | 3.18             | x86_64 & aarch64   |
+| 3.9         | 7.3.12         | 3.18             | x86_64 & aarch64   |
+| 2.7         | 7.3.12         | 3.18             | x86_64 & aarch64   |
+| 3.9         | 7.3.11         | 3.17             | x86_64 & aarch64   |
+| 3.8         | 7.3.11         | 3.17             | x86_64 & aarch64   |
+| 2.7         | 7.3.11         | 3.17             | x86_64 & aarch64   |
 
 Please make an issue if you want to see a specific version.
