@@ -42,6 +42,7 @@ jobs:
           - target: "alpine-pypy-3_9"
             runner: "self-hosted"
           - target: "alpine-pypy-3_10"
+            runner: "self-hosted"
     steps:
       - uses: actions/checkout@v3
 
