@@ -6,27 +6,35 @@ target "docker-metadata-action" {
     ]
 }
 
+variable "PYPY_VERSION" {
+    default = "7.3.12"
+}
 
 target "alpine-pypy-2_7" {
     context = "./export"
     args = {
         PIP_URL = "https://bootstrap.pypa.io/pip/2.7/get-pip.py"
         PYPY_BASE = "2.7"
+        PYPY_VERSION = "${PYPY_VERSION}"
     }
 
     tags = [
-        "cyb3rjak3/alpine-pypy:2.7-7.3.11-3.17",
-        "ghcr.io/cyb3r-jak3/alpine-pypy:2.7-7.3.11-3.17"
+        "cyb3rjak3/alpine-pypy:2.7-${PYPY_VERSION}-3.17",
+        "ghcr.io/cyb3r-jak3/alpine-pypy:2.7-${PYPY_VERSION}-3.17"
     ]
     
 }
 
 target "alpine-pypy-3_9" {
     context = "./export"
-    PYPY_BASE = "3.9"
+    args =  {
+        PYPY_BASE = "3.9"
+        PYPY_VERSION = "${PYPY_VERSION}"
+    }
+    
     tags = [
-        "cyb3rjak3/alpine-pypy:3.9-7.3.11-3.17",
-        "ghcr.io/cyb3r-jak3/alpine-pypy:3.9-7.3.11-3.17"
+        "cyb3rjak3/alpine-pypy:3.9-${PYPY_VERSION}-3.17",
+        "ghcr.io/cyb3r-jak3/alpine-pypy:3.9-${PYPY_VERSION}-3.17"
     ]
 }
 
@@ -34,18 +42,19 @@ target "alpine-pypy-3_10" {
     context = "./export"
     args = {
         PYPY_BASE = "3.10"
+        PYPY_VERSION = "${PYPY_VERSION}"
     }
 
     tags = [
-        "cyb3rjak3/alpine-pypy:3.8-7.3.11-3.17",
-        "ghcr.io/cyb3r-jak3/alpine-pypy:3.8-7.3.11-3.17"
+        "cyb3rjak3/alpine-pypy:3.8-${PYPY_VERSION}-3.17",
+        "ghcr.io/cyb3r-jak3/alpine-pypy:3.8-${PYPY_VERSION}-3.17"
     ]
 }
 
 target "alpine-pypy-builder" {
     context = "./builder"
     args = {
-        BUILD_IMAGE = "ghcr.io/cyb3r-jak3/alpine-pypy:2.7-7.3.11-3.17"
+        BUILD_IMAGE = "ghcr.io/cyb3r-jak3/alpine-pypy:2.7-7.3.12-3.17"
     }
 
     tags = [
