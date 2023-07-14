@@ -63,7 +63,7 @@ target "alpine-pypy-builder-bootstrap" {
     platforms = [
         "linux/amd64",
         "linux/arm64",
-        "linux/386"
+        // "linux/386"
     ]
 }
 
