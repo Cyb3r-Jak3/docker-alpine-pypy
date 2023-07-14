@@ -52,7 +52,7 @@ jobs:
             BUILD_IMAGE=ghcr.io/cyb3r-jak3/alpine-pypy:2.7-7.3.11-3.17
           cache-to: type=gha,mode=max,scope=buildx-alpine-pypy-workflow-builder:${{ env.ALPINE_VERSION }}
           cache-from: type=gha,scope=buildx-alpine-pypy-workflow-builder:${{ env.ALPINE_VERSION }}
-          platforms: linux/amd64, linux/arm64, linux/386
+          platforms: linux/amd64, linux/arm64
           push: true
 
   Build:
