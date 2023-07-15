@@ -55,7 +55,6 @@ jobs:
 
       - name: Login To GitHub
         uses: docker/login-action@v2
-        if: ${{ github.ref == 'refs/heads/main' }}
         with:
           registry: ghcr.io
           username: ${{ github.repository_owner }}
@@ -89,12 +88,9 @@ jobs:
           push: ${{ github.ref == 'refs/heads/main' }}
           pull: true
           set: |
-            *.cache-from=ghcr.io/cyb3r-jak3/alpine-pypy-cache:${{ matrix.target }}
-            *.cache-to=ghcr.io/cyb3r-jak3/alpine-pypy-cache:${{ matrix.target }}
+            *.cache-from=type=registry,ref=ghcr.io/cyb3r-jak3/alpine-pypy-cache:${{ matrix.target }}
+            *.cache-to=type=registry,ref=ghcr.io/cyb3r-jak3/alpine-pypy-cache:${{ matrix.target }},mode=max
 
-
-# cache-to: type=gha,mode=max,scope=buildx-alpine-pypy-workflow-builder:${{ env.ALPINE_VERSION }}
-# cache-from: type=gha,scope=buildx-alpine-pypy-workflow-builder:${{ env.ALPINE_VERSION }}
 
   Update-DockerHub:
     runs-on: ubuntu-latest
