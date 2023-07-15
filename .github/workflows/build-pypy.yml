@@ -117,9 +117,23 @@ jobs:
           echo "${PYPY_SHA256SUM}"
           docker run --platform linux/${{ env.ARCH }}  -v $(pwd)/tmp:/tmp -e PYPY_BASE=${{ matrix.PYPY_BASE }} -e PYPY_VERSION=${{ matrix.PYPY_VERSION }} -e PYPY_SHA256SUM="${PYPY_SHA256SUM}" ${{ env.BUILDER_IMAGE_TAG }}:${{ env.ALPINE_VERSION }}-${{ github.sha }}
 
+      - name: Import GPG key
+        uses: crazy-max/ghaction-import-gpg@v5
+        with:
+          gpg_private_key: ${{ secrets.GPG_PRIVATE_KEY }}
+          passphrase: ${{ secrets.PASSPHRASE }}
+          trust_level: 5
+
+      - name: Prep files
+        run: |
+          mkdir output
+          mv ./tmp/usession-release-pypy${{ matrix.PYPY_BASE }}-v${{ matrix.PYPY_VERSION }}-*/build/**.tar.bz2 ./output/pypy${{ matrix.PYPY_BASE }}-v${{ matrix.PYPY_VERSION }}-linux-${{ env.PYPY_ARCH }}-alpine.tar.bz2
+          # find ./downloads/ -type f | parallel 'echo "Signing {}"; gpg --quiet --batch --yes --detach-sig {}; sha256sum {} > {}.sha256sum; sha512sum {} > {}.sha512sum'
+          sha256sum ./output/pypy${{ matrix.PYPY_BASE }}-v${{ matrix.PYPY_VERSION }}-linux-${{ env.PYPY_ARCH }}-alpine.tar.bz2 > ./output/pypy${{ matrix.PYPY_BASE }}-v${{ matrix.PYPY_VERSION }}-linux-${{ env.PYPY_ARCH }}-alpine.tar.bz2.sha256sum
+
       - name: Upload PyPy to Artifacts
         if: steps.file-check.outputs.STATUS == 404
         uses: actions/upload-artifact@v3
         with:
           name: pypy-${{ env.ARCH }} 
-          path: ./tmp/usession-release-pypy${{ matrix.PYPY_BASE }}-v${{ matrix.PYPY_VERSION }}-*/build/**.tar.bz2
+          path: ./output
