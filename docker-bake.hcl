@@ -10,17 +10,22 @@ variable "PYPY_VERSION" {
     default = "7.3.12"
 }
 
+variable "ALPINE_VERSION" {
+    default = "3.18"
+}
+
 target "alpine-pypy-2_7" {
     context = "./export"
     args = {
         PIP_URL = "https://bootstrap.pypa.io/pip/2.7/get-pip.py"
         PYPY_BASE = "2.7"
         PYPY_VERSION = "${PYPY_VERSION}"
+        ALPINE_VERSION = "${ALPINE_VERSION}"
     }
 
     tags = [
-        "cyb3rjak3/alpine-pypy:2.7-${PYPY_VERSION}-3.17",
-        "ghcr.io/cyb3r-jak3/alpine-pypy:2.7-${PYPY_VERSION}-3.17"
+        "cyb3rjak3/alpine-pypy:2.7-${PYPY_VERSION}-${ALPINE_VERSION}",
+        "ghcr.io/cyb3r-jak3/alpine-pypy:2.7-${PYPY_VERSION}-${ALPINE_VERSION}"
     ]
     
 }
@@ -30,11 +35,12 @@ target "alpine-pypy-3_9" {
     args =  {
         PYPY_BASE = "3.9"
         PYPY_VERSION = "${PYPY_VERSION}"
+        ALPINE_VERSION = "${ALPINE_VERSION}"
     }
     
     tags = [
-        "cyb3rjak3/alpine-pypy:3.9-${PYPY_VERSION}-3.17",
-        "ghcr.io/cyb3r-jak3/alpine-pypy:3.9-${PYPY_VERSION}-3.17"
+        "cyb3rjak3/alpine-pypy:3.9-${PYPY_VERSION}-${ALPINE_VERSION}",
+        "ghcr.io/cyb3r-jak3/alpine-pypy:3.9-${PYPY_VERSION}-${ALPINE_VERSION}"
     ]
 }
 
@@ -43,11 +49,12 @@ target "alpine-pypy-3_10" {
     args = {
         PYPY_BASE = "3.10"
         PYPY_VERSION = "${PYPY_VERSION}"
+        ALPINE_VERSION = "${ALPINE_VERSION}"
     }
 
     tags = [
-        "cyb3rjak3/alpine-pypy:3.8-${PYPY_VERSION}-3.17",
-        "ghcr.io/cyb3r-jak3/alpine-pypy:3.8-${PYPY_VERSION}-3.17"
+        "cyb3rjak3/alpine-pypy:3.10-${PYPY_VERSION}-${ALPINE_VERSION}",
+        "ghcr.io/cyb3r-jak3/alpine-pypy:3.10-${PYPY_VERSION}-${ALPINE_VERSION}"
     ]
 }
 
@@ -79,9 +86,12 @@ target "alpine-pypy-builder-bootstrap" {
 
 target "python-2_7" {
     context = "python-2.7"
+    args = {
+        ALPINE_VERSION = "${ALPINE_VERSION}"
+    }
     tags = [
-        "cyb3rjak3/python-2.7.18:3.17",
-        "ghcr.io/cyb3r-jak3/python-2.7.18:3.17"
+        "cyb3rjak3/python-2.7.18:${ALPINE_VERSION}",
+        "ghcr.io/cyb3r-jak3/python-2.7.18:${ALPINE_VERSION}"
     ]
     platforms = [
         "linux/amd64",

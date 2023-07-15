@@ -15,7 +15,7 @@ permissions:
 
 
 env:
-  ALPINE_VERSION: 3.17
+  ALPINE_VERSION: 3.18
   BUILDER_IMAGE_TAG: ghcr.io/cyb3r-jak3/alpine-pypy-builder-workflow
 
 concurrency:

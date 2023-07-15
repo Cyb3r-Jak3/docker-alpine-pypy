@@ -1,4 +1,5 @@
-FROM alpine:3.18
+ARG ALPINE_VERSION
+FROM alpine:${ALPINE_VERSION}
 
 # ensure local pypy is preferred over distribution python
 ENV PATH /usr/local/bin:$PATH
@@ -40,7 +41,7 @@ RUN set -ex; \
     pypy --version
 
 # if this is called "PIP_VERSION", pip explodes with "ValueError: invalid truth value '<VERSION>'"
-ENV PYTHON_PIP_VERSION 20.0.2
+ENV PYTHON_PIP_VERSION 23.2
 ARG PIP_URL=https://bootstrap.pypa.io/get-pip.py
 RUN set -ex; \
     \

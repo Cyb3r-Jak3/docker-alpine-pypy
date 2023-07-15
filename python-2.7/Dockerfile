@@ -1,6 +1,7 @@
-# Take from the last python 2.7 alpine image python:2.7.18-alpine
-FROM alpine:3.17
+ARG ALPINE_VERSION
+FROM alpine:${ALPINE_VERSION}
 
+# Take from the last python 2.7 alpine image python:2.7.18-alpine
 ENV PYTHONIOENCODING=UTF-8
 ENV LANG=C.UTF-8
 ENV PYTHON_VERSION=2.7.18
