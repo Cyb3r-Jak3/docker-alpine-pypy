@@ -119,12 +119,14 @@ jobs:
 
       - name: Import GPG key
         uses: crazy-max/ghaction-import-gpg@v5
+        if: steps.file-check.outputs.STATUS == 404
         with:
           gpg_private_key: ${{ secrets.GPG_PRIVATE_KEY }}
           passphrase: ${{ secrets.PASSPHRASE }}
           trust_level: 5
 
       - name: Prep files
+        if: steps.file-check.outputs.STATUS == 404
         run: |
           mkdir output
           mv ./tmp/usession-release-pypy${{ matrix.PYPY_BASE }}-v${{ matrix.PYPY_VERSION }}-*/build/**.tar.bz2 ./output/pypy${{ matrix.PYPY_BASE }}-v${{ matrix.PYPY_VERSION }}-linux-${{ env.PYPY_ARCH }}-alpine.tar.bz2
