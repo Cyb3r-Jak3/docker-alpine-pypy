@@ -63,7 +63,7 @@ jobs:
       fail-fast: true
       matrix:
         PYPY_BASE: ["2.7", "3.9", "3.10"]
-        PYPY_VERSION: ["7.3.12"]
+        PYPY_VERSION: ["7.3.13"]
         RUNNER: ["self-hosted", "ubuntu-latest"]
 
     steps:
