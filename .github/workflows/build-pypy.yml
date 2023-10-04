@@ -139,3 +139,9 @@ jobs:
         with:
           name: pypy-${{ env.ARCH }} 
           path: ./output
+
+      - name: Clean files
+        if: steps.file-check.outputs.STATUS == 404
+        run: |
+          rm -rf output/
+          rm -rf tmp/
