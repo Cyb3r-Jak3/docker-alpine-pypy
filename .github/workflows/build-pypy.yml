@@ -84,7 +84,7 @@ jobs:
         run: |
           import os
           import requests
-          base_url = "https://pypy.cyberjake.xyz/pypy/${{ matrix.PYPY_BASE }}/pypy${{ matrix.PYPY_BASE }}-v${{ matrix.PYPY_VERSION }}-linux-${{ env.PYPY_ARCH }}-alpine.tar.bz2"
+          base_url = "https://pypy.cyberjake.xyz/pypy/${{ matrix.PYPY_BASE }}/pypy${{ matrix.PYPY_BASE }}-v${{ matrix.PYPY_VERSION }}-linux-${{ env.ARCH }}-alpine.tar.bz2"
           file_resp = requests.head(base_url)
           signature_resp = requests.head(f"{base_url}.sig")
           if file_resp.status_code == 404 or signature_resp.status_code == 404:
@@ -126,9 +126,9 @@ jobs:
         if: steps.file-check.outputs.STATUS == 404
         run: |
           mkdir output
-          mv ./tmp/usession-release-pypy${{ matrix.PYPY_BASE }}-v${{ matrix.PYPY_VERSION }}-*/build/**.tar.bz2 ./output/pypy${{ matrix.PYPY_BASE }}-v${{ matrix.PYPY_VERSION }}-linux-${{ env.PYPY_ARCH }}-alpine.tar.bz2
-          gpg --quiet --batch --yes --detach-sig ./output/pypy${{ matrix.PYPY_BASE }}-v${{ matrix.PYPY_VERSION }}-linux-${{ env.PYPY_ARCH }}-alpine.tar.bz2
-          sha256sum ./output/pypy${{ matrix.PYPY_BASE }}-v${{ matrix.PYPY_VERSION }}-linux-${{ env.PYPY_ARCH }}-alpine.tar.bz2 > ./output/pypy${{ matrix.PYPY_BASE }}-v${{ matrix.PYPY_VERSION }}-linux-${{ env.PYPY_ARCH }}-alpine.tar.bz2.sha256sum
+          mv ./tmp/usession-release-pypy${{ matrix.PYPY_BASE }}-v${{ matrix.PYPY_VERSION }}-*/build/**.tar.bz2 ./output/pypy${{ matrix.PYPY_BASE }}-v${{ matrix.PYPY_VERSION }}-linux-${{ env.ARCH }}-alpine.tar.bz2
+          gpg --quiet --batch --yes --detach-sig ./output/pypy${{ matrix.PYPY_BASE }}-v${{ matrix.PYPY_VERSION }}-linux-${{ env.ARCH }}-alpine.tar.bz2
+          sha256sum ./output/pypy${{ matrix.PYPY_BASE }}-v${{ matrix.PYPY_VERSION }}-linux-${{ env.ARCH }}-alpine.tar.bz2 > ./output/pypy${{ matrix.PYPY_BASE }}-v${{ matrix.PYPY_VERSION }}-linux-${{ env.ARCH }}-alpine.tar.bz2.sha256sum
           
       - name: Upload PyPy to Artifacts
         if: steps.file-check.outputs.STATUS == 404
