@@ -31,7 +31,7 @@ In order to get the bootstrap image, Python 2.7 is need. There is a single tag f
 
 ## PyPy Downloads
 
-The built PyPy code is available for download as well. All builds are signed by my release key `44FE09DEE9E9EC21EF903F06CA614AB6BD73BB06` [download](https://cyberjake.xyz/files/releases@cyberjake.xyz.asc). Download use the following format
+The built PyPy code is available for download as well. All builds are signed by my release key `44FE09DEE9E9EC21EF903F06CA614AB6BD73BB06` [download](https://cyberjake.xyz/files/releases@cyberjake.xyz.asc). To download use the following format
 
 PyPy:
 
@@ -54,6 +54,9 @@ PyPy: 3.9-7.3.11 is `https://pypy.cyberjake.xyz/pypy/3.9/pypy3.9-v7.3.11-linux-x
 
 | PyPy Base   | PyPy Version   | Alpine Version   |       Arch         |
 |:-----------:|:--------------:|:----------------:|:------------------:|
+| 3.10        | 7.3.13         | 3.18             | x86_64 & aarch64   |
+| 3.9         | 7.3.13         | 3.18             | x86_64 & aarch64   |
+| 2.7         | 7.3.13         | 3.18             | x86_64 & aarch64   |
 | 3.10        | 7.3.12         | 3.18             | x86_64 & aarch64   |
 | 3.9         | 7.3.12         | 3.18             | x86_64 & aarch64   |
 | 2.7         | 7.3.12         | 3.18             | x86_64 & aarch64   |
