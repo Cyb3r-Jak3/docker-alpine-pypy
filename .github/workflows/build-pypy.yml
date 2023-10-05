@@ -71,6 +71,7 @@ jobs:
       - name: Setup Platforms
         env:
             RUNS_ON: ${{ matrix.RUNNER }}
+        shell: python
         run: |
           import os
           if os.environ["RUNS_ON"] == "self-hosted":
