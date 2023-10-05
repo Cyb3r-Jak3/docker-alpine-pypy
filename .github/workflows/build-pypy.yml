@@ -68,6 +68,16 @@ jobs:
 
     steps:
 
+      - name: Select build platform
+        env:
+          RUNS_ON: ${{ matrix.RUNNER }}
+        run: |
+          if [ $RUNS_ON = "self-hosted" ]; then
+              echo "ARCH=arm64" >> $GITHUB_ENV
+          else
+              echo "ARCH=amd64" >> $GITHUB_ENV
+          fi
+
       - name: Check if file and signature already exists
         id: file-check
         shell: python
@@ -96,17 +106,6 @@ jobs:
       - name: Set up Docker Buildx
         if: steps.file-check.outputs.STATUS == 404
         uses: docker/setup-buildx-action@v2
-
-      - name: Select build platform
-        if: steps.file-check.outputs.STATUS == 404
-        env:
-          RUNS_ON: ${{ matrix.RUNNER }}
-        run: |
-          if [ $RUNS_ON = "self-hosted" ]; then
-              echo "ARCH=arm64" >> $GITHUB_ENV
-          else
-              echo "ARCH=amd64" >> $GITHUB_ENV
-          fi
 
       - name: Run Build
         if: steps.file-check.outputs.STATUS == 404
