@@ -67,19 +67,10 @@ jobs:
         RUNNER: ["self-hosted", "ubuntu-latest"]
 
     steps:
-      - name: Select pypy arch
-        env:
-          RUNS_ON: ${{ matrix.RUNNER }}
-        run: |
-          if [ $RUNS_ON = "self-hosted" ]; then
-              echo "PYPY_ARCH=aarch64" >> $GITHUB_ENV
-          else
-              echo "PYPY_ARCH=x86_64" >> $GITHUB_ENV
-          fi
 
       - name: Check if file and signature already exists
         id: file-check
-        shell: python
+        shell: python3
         run: |
           import os
           import requests
