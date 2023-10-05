@@ -45,4 +45,4 @@ cd "$BASE_DIR"/pypy/goal
 # Packaging
 cd "$BASE_DIR"/pypy/tool/release
 "$PYTHON" package.py --archive-name "$PYPY_NAME-v$PYPY_RELEASE_VERSION-$PYPY_ARCH"
-chown -R 1003:1003 /tmp
+chmod -R 0777 /tmp
