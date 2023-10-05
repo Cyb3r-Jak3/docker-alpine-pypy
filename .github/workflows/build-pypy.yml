@@ -70,7 +70,7 @@ jobs:
 
       - name: Check if file and signature already exists
         id: file-check
-        shell: python3
+        shell: python
         run: |
           import os
           import requests
