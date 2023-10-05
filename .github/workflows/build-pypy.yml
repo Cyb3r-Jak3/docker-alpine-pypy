@@ -130,7 +130,7 @@ jobs:
         run: |
           mkdir output
           mv ./tmp/usession-release-pypy${{ matrix.PYPY_BASE }}-v${{ matrix.PYPY_VERSION }}-*/build/**.tar.bz2 ./output/pypy${{ matrix.PYPY_BASE }}-v${{ matrix.PYPY_VERSION }}-linux-${{ env.PYPY_ARCH }}-alpine.tar.bz2
-          gpg --quiet --batch --yes --detach-sig ./output/pypy${{ matrix.PYPY_BASE }}-v${{ matrix.PYPY_VERSION }}-*/build/**.tar.bz2.sig
+          gpg --quiet --batch --yes --detach-sig ./output/pypy${{ matrix.PYPY_BASE }}-v${{ matrix.PYPY_VERSION }}-linux-${{ env.PYPY_ARCH }}-alpine.tar.bz2
           sha256sum ./output/pypy${{ matrix.PYPY_BASE }}-v${{ matrix.PYPY_VERSION }}-linux-${{ env.PYPY_ARCH }}-alpine.tar.bz2 > ./output/pypy${{ matrix.PYPY_BASE }}-v${{ matrix.PYPY_VERSION }}-linux-${{ env.PYPY_ARCH }}-alpine.tar.bz2.sha256sum
           
       - name: Upload PyPy to Artifacts
