@@ -7,6 +7,8 @@ def save_file(url: str) -> None:
     if resp.status_code == 200:
         with open(url.split("/")[-1], "wb") as file:
                 file.write(resp.content)
+    else:
+        raise Exception(f"Failed to download {url} with status code {resp.status_code}")
 
 def main():
     PYPY_BASE = os.environ["PYPY_BASE"]
