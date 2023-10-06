@@ -9,6 +9,7 @@ on:
       pypy_version:
           description: 'PyPy version to build: 7.3.13'
           required: true
+  push:
 
 jobs:
   generate-release:
