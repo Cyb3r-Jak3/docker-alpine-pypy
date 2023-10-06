@@ -34,7 +34,7 @@ jobs:
         - name: Generate Checksums
           run: |
             ls -la *.tar.bz2*
-            sha256sum *.tar.bz2 > sums.sha256
+            sha256sum *.tar.bz2 > checksums.sha256
 
         - name: Create tag
           uses: actions/github-script@v6.4.1
@@ -55,4 +55,4 @@ jobs:
             files: |
               *.tar.bz2
               *.tar.bz2.sig
-              sums.sha256
+              checksums.sha256
