@@ -1,0 +1,58 @@
+name: Generate Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      pypy_base:
+          description: 'Comma seperated base version: 2.7,3.9,3.10'
+          required: true
+      pypy_version:
+          description: 'PyPy version to build: 7.3.13'
+          required: true
+
+jobs:
+  generate-release:
+    runs-on: ubuntu-latest
+    permissions:
+        contents: write
+    env:
+      TAG: "${{ github.event.inputs.pypy_version }}-${{ github.event.inputs.pypy_base }}"
+    steps:
+        - name: Checkout code
+          uses: actions/checkout@v2
+        - name: Release Info
+          run: |
+              echo "::notice title=PYPY_BASE::${{ github.event.inputs.pypy_base }}"
+              echo "::notice title=PYPY_VERSION:: ${{ github.event.inputs.pypy_version }}"
+
+        - name: Prep Release
+          run: python .github/release.py
+          env:
+            PYPY_BASE: ${{ github.event.inputs.pypy_base }}
+            PYPY_VERSION: ${{ github.event.inputs.pypy_version }}
+
+        - name: Generate Checksums
+          run: |
+            ls -la *.tar.bz2*
+            sha256sum *.tar.bz2 > checksums.sha256
+
+        - name: Create tag
+          uses: actions/github-script@v6.4.1
+          with:
+            script: |
+              github.rest.git.createRef({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                ref: 'refs/tags/${{ env.TAG }}',
+                sha: context.sha
+              })
+        
+        - name: Release
+          uses: crazy-max/ghaction-github-release@v2
+          with:
+            draft: trues
+            tag_name: ${{ env.TAG }}
+            files: |
+              *.tar.bz2
+              *.tar.bz2.sig
+              checksums.sha256
