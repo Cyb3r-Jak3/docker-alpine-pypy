@@ -9,7 +9,6 @@ on:
       pypy_version:
           description: 'PyPy version to build: 7.3.13'
           required: true
-  push:
 
 jobs:
   generate-release:
@@ -32,6 +31,7 @@ jobs:
 
         - name: Generate Checksums
           run: |
+            ls -la *.tar.bz2*
             sha256sum *.tar.bz2 > sums.sha256
 
         - name: Create tag

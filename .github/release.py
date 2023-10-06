@@ -9,10 +9,8 @@ def save_file(url: str) -> None:
                 file.write(resp.content)
 
 def main():
-    # PYPY_BASE = os.environ["PYPY_BASE"]
-    PYPY_BASE = "3.9,3.10"
-    # PYPY_VERSION = os.environ["PYPY_VERSION"]
-    PYPY_VERSION = "7.3.13"
+    PYPY_BASE = os.environ["PYPY_BASE"]
+    PYPY_VERSION = os.environ["PYPY_VERSION"]
     PYPY_BASES= PYPY_BASE.split(",")
     ARCHES = ["x86_64", "aarch64"]
     base_url= "https://pypy.cyberjake.xyz/pypy/{base}/pypy{base}-v{pypy_version}-linux-{arch}-alpine.tar.bz2"
