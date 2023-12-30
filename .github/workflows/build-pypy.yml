@@ -15,7 +15,7 @@ permissions:
 
 
 env:
-  ALPINE_VERSION: 3.18
+  ALPINE_VERSION: 3.19
   BUILDER_IMAGE_TAG: ghcr.io/cyb3r-jak3/alpine-pypy-builder-workflow
 
 concurrency:
@@ -28,23 +28,23 @@ jobs:
     name: Prep Docker Container
     steps:
 
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Login To GitHub
-        uses: docker/login-action@v2
+        uses: docker/login-action@v3
         with:
           registry: ghcr.io
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Set up QEMU
-        uses: docker/setup-qemu-action@v2
+        uses: docker/setup-qemu-action@v3
 
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
+        uses: docker/setup-buildx-action@v3
 
       - name: Build Docker image
-        uses: docker/build-push-action@v4
+        uses: docker/build-push-action@v5.1.0
         with:
           context: "builder/"
           tags: ${{ env.BUILDER_IMAGE_TAG }}:${{ env.ALPINE_VERSION }}-${{ github.sha }}
@@ -63,25 +63,38 @@ jobs:
       fail-fast: true
       matrix:
         PYPY_BASE: ["2.7", "3.9", "3.10"]
-        PYPY_VERSION: ["7.3.12"]
+        PYPY_VERSION: ["7.3.14"]
         RUNNER: ["self-hosted", "ubuntu-latest"]
 
     steps:
-      - name: Select pypy arch
-        env:
-          RUNS_ON: ${{ matrix.RUNNER }}
-        run: |
-          if [ $RUNS_ON = "self-hosted" ]; then
-              echo "PYPY_ARCH=aarch64" >> $GITHUB_ENV
-          else
-              echo "PYPY_ARCH=x86_64" >> $GITHUB_ENV
-          fi
 
-      - name: Check if file already exists
-        id: file-check
+      - name: Setup Platforms
+        env:
+            RUNS_ON: ${{ matrix.RUNNER }}
+        shell: python
         run: |
-          STATUS=$(curl -s -w "%{http_code}\n" -o /dev/null --head https://pypy.cyberjake.xyz/pypy/${{ matrix.PYPY_BASE }}/pypy${{ matrix.PYPY_BASE }}-v${{ matrix.PYPY_VERSION }}-linux-${{ env.PYPY_ARCH }}-alpine.tar.bz2)
-          echo "STATUS=$STATUS" >> $GITHUB_OUTPUT
+          import os
+          if os.environ["RUNS_ON"] == "self-hosted":
+            with open(os.environ['GITHUB_ENV'], 'a') as fh:
+              print('ARCH=arm64', file=fh)
+              print('PYPY_ARCH=aarch64', file=fh)
+          else:
+            with open(os.environ['GITHUB_ENV'], 'a') as fh:
+              print('ARCH=amd64', file=fh)
+              print('PYPY_ARCH=x86_64', file=fh)
+
+      - name: Check if file and signature already exists
+        id: file-check
+        shell: python
+        run: |
+          import os
+          import requests
+          base_url = "https://pypy.cyberjake.xyz/pypy/${{ matrix.PYPY_BASE }}/pypy${{ matrix.PYPY_BASE }}-v${{ matrix.PYPY_VERSION }}-linux-${{ env.PYPY_ARCH }}-alpine.tar.bz2"
+          file_resp = requests.head(base_url)
+          signature_resp = requests.head(f"{base_url}.sig")
+          if file_resp.status_code == 404 or signature_resp.status_code == 404:
+            with open(os.environ['GITHUB_OUTPUT'], 'a') as fh:
+              print('STATUS=404', file=fh)
 
       - name: Login To GitHub
         if: steps.file-check.outputs.STATUS == 404
@@ -98,17 +111,6 @@ jobs:
       - name: Set up Docker Buildx
         if: steps.file-check.outputs.STATUS == 404
         uses: docker/setup-buildx-action@v2
-
-      - name: Select build platform
-        if: steps.file-check.outputs.STATUS == 404
-        env:
-          RUNS_ON: ${{ matrix.RUNNER }}
-        run: |
-          if [ $RUNS_ON = "self-hosted" ]; then
-              echo "ARCH=arm64" >> $GITHUB_ENV
-          else
-              echo "ARCH=amd64" >> $GITHUB_ENV
-          fi
 
       - name: Run Build
         if: steps.file-check.outputs.STATUS == 404
@@ -128,14 +130,21 @@ jobs:
       - name: Prep files
         if: steps.file-check.outputs.STATUS == 404
         run: |
+          wget --quiet -O sign.py https://raw.githubusercontent.com/Cyb3r-Jak3/docker-alpine-pypy/${{ github.sha }}/.github/sign.py
           mkdir output
           mv ./tmp/usession-release-pypy${{ matrix.PYPY_BASE }}-v${{ matrix.PYPY_VERSION }}-*/build/**.tar.bz2 ./output/pypy${{ matrix.PYPY_BASE }}-v${{ matrix.PYPY_VERSION }}-linux-${{ env.PYPY_ARCH }}-alpine.tar.bz2
-          find ./downloads/ -type f | parallel 'echo "Signing {}"; gpg --quiet --batch --yes --detach-sig {}; sha256sum {} > {}.sha256sum; sha512sum {} > {}.sha512sum'
-          sha256sum ./output/pypy${{ matrix.PYPY_BASE }}-v${{ matrix.PYPY_VERSION }}-linux-${{ env.PYPY_ARCH }}-alpine.tar.bz2 > ./output/pypy${{ matrix.PYPY_BASE }}-v${{ matrix.PYPY_VERSION }}-linux-${{ env.PYPY_ARCH }}-alpine.tar.bz2.sha256sum
-
+          find ./output/ -type f -exec python3 sign.py {} \;
+          
       - name: Upload PyPy to Artifacts
         if: steps.file-check.outputs.STATUS == 404
+        # Leave with v3 so we can use the same name for the artifact
         uses: actions/upload-artifact@v3
         with:
           name: pypy-${{ env.ARCH }} 
           path: ./output
+
+      - name: Clean files
+        if: steps.file-check.outputs.STATUS == 404
+        run: |
+          rm -rf output/
+          rm -rf tmp/
