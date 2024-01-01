@@ -41,7 +41,7 @@ RUN set -ex; \
     pypy --version
 
 # if this is called "PIP_VERSION", pip explodes with "ValueError: invalid truth value '<VERSION>'"
-ENV PYTHON_PIP_VERSION 23.3.2
+ENV PYTHON_PIP_VERSION 20.3.4
 ARG PIP_URL=https://bootstrap.pypa.io/get-pip.py
 RUN set -ex; \
     \
@@ -52,6 +52,7 @@ RUN set -ex; \
         --no-cache-dir \
         "pip==$PYTHON_PIP_VERSION" setuptools wheel && \
     pip --version && \
+    python -m pip install --upgrade pip && \
     rm -f get-pip.py
 
 CMD ["pypy"]
