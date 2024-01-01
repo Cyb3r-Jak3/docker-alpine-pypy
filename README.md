@@ -21,13 +21,13 @@ The images that are used to build PyPy can be found in [builder](./builder/). Th
 
 Where:
 
-- `$PYPY_VERSION`: Version of PyPy used. Tag in the form of `{2.7,3.9}-$VERSION` (e.g. `3.9-7.3.11`).
+- `$PYPY_VERSION`: Version of PyPy used. Tag in the form of `{2.7,3.8,3.9,3.10}-$VERSION` (e.g. `3.9-7.3.11`).
 
 - `$BOOTSTRAP`: If image is using Python then `bootstrap` is added otherwise it does not exist.
 
 ### Python 2.7.18 Image
 
-In order to get the bootstrap image, Python 2.7 is need. There is a single tag for this image: `python-2.7.18:3.17` which is python 2.7.18 on alpine 3.17. **This image should only be used for building PyPy**
+In order to get the bootstrap image, Python 2.7 is need. There is a single tag for this image: `python-2.7.18:3.17` which is python 2.7.18 on alpine 3.19. **This image should only be used for building PyPy**
 
 ## PyPy Downloads
 
@@ -43,7 +43,7 @@ GPG Signature:
 
 Where:
 
-- `$PYPY_BASE`: Version of base pypy (e.g. `2.7`, `3.8`, `3.9`)
+- `$PYPY_BASE`: Version of base pypy (e.g. `2.7`, `3.8`, `3.9`, `3.10`)
 - `$FILENAME`: Built filename (e.g. `pypy3.9-v7.3.11-linux-x86_64-alpine.tar.bz2`)
 
 Example:
@@ -54,6 +54,9 @@ PyPy: 3.9-7.3.11 is `https://pypy.cyberjake.xyz/pypy/3.9/pypy3.9-v7.3.11-linux-x
 
 | PyPy Base | PyPy Version   | Alpine Version | Arch             |
 |-----------|----------------|----------------|------------------|
+| 3.10      | 7.3.14         | 3.19           | x86_64 & aarch64 |
+| 3.9       | 7.3.14         | 3.19           | x86_64 & aarch64 |
+| 3.8       | 7.3.14         | 3.19           | x86_64 & aarch64 |
 | 3.10      | 7.3.12, 7.3.13 | 3.18           | x86_64 & aarch64 |
 | 3.9       | 7.3.12, 7.3.13 | 3.18           | x86_64 & aarch64 |
 | 2.7       | 7.3.12, 7.3.13 | 3.18           | x86_64 & aarch64 |
@@ -62,7 +65,6 @@ PyPy: 3.9-7.3.11 is `https://pypy.cyberjake.xyz/pypy/3.9/pypy3.9-v7.3.11-linux-x
 | 2.7       | 7.3.11         | 3.17           | x86_64 & aarch64 |
 
 Please make an issue if you want to see a specific version.
-
 
 ### GitHub Release
 
