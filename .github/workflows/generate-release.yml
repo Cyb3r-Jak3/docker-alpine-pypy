@@ -7,7 +7,7 @@ on:
           description: 'Comma seperated base version: 2.7,3.9,3.10'
           required: true
       pypy_version:
-          description: 'PyPy version to build: 7.3.13'
+          description: 'PyPy version to download: 7.3.13'
           required: true
 
 jobs:
@@ -19,7 +19,7 @@ jobs:
       TAG: "${{ github.event.inputs.pypy_version }}-${{ github.event.inputs.pypy_base }}"
     steps:
         - name: Checkout code
-          uses: actions/checkout@v2
+          uses: actions/checkout@v4
         - name: Release Info
           run: |
               echo "::notice title=PYPY_BASE::${{ github.event.inputs.pypy_base }}"
@@ -35,9 +35,11 @@ jobs:
           run: |
             ls -la *.tar.bz2*
             sha256sum *.tar.bz2 > checksums.sha256
+            gpg --no-tty --keyserver hkps://keys.openpgp.org --auto-key-locate keyserver --locate-keys releases@cyberjake.xyz
+            find . -iname "*.tar.bz2" -type f -exec  bash -c "echo verifying {}; gpg --verify {}.sig {} " \;
 
         - name: Create tag
-          uses: actions/github-script@v6.4.1
+          uses: actions/github-script@v7.0.1
           with:
             script: |
               github.rest.git.createRef({
@@ -50,7 +52,7 @@ jobs:
         - name: Release
           uses: crazy-max/ghaction-github-release@v2
           with:
-            draft: trues
+            draft: true
             tag_name: ${{ env.TAG }}
             files: |
               *.tar.bz2
