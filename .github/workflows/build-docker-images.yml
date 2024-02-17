@@ -44,7 +44,7 @@ jobs:
           - target: "alpine-pypy-3_10"
             runner: "self-hosted"
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Login to Docker
         uses: docker/login-action@v2
@@ -102,7 +102,7 @@ jobs:
       matrix:
         repository: ["alpine-pypy", "python-2.7.18", "alpine-pypy-builder"]
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Docker Hub Description
         uses: peter-evans/dockerhub-description@v3
