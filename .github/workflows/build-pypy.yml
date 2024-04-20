@@ -44,7 +44,7 @@ jobs:
         uses: docker/setup-buildx-action@v3
 
       - name: Build Docker image
-        uses: docker/build-push-action@v5.3.0
+        uses: docker/build-push-action@v5
         with:
           context: "builder/"
           tags: ${{ env.BUILDER_IMAGE_TAG }}:${{ env.ALPINE_VERSION }}-${{ github.sha }}
@@ -138,9 +138,9 @@ jobs:
       - name: Upload PyPy to Artifacts
         if: steps.file-check.outputs.STATUS == 404
         # Leave with v3 so we can use the same name for the artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
-          name: pypy-${{ env.ARCH }} 
+          name: pypy-${{ env.ARCH }}-${{ matrix.PYPY_BASE }}-${{ matrix.PYPY_VERSION }}
           path: ./output
 
       - name: Clean files
