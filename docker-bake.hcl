@@ -7,7 +7,7 @@ target "docker-metadata-action" {
 }
 
 variable "PYPY_VERSION" {
-    default = "7.3.15"
+    default = "7.3.16"
 }
 
 variable "ALPINE_VERSION" {
