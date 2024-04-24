@@ -17,6 +17,7 @@ permissions:
 env:
   ALPINE_VERSION: 3.19
   BUILDER_IMAGE_TAG: ghcr.io/cyb3r-jak3/alpine-pypy-builder-workflow
+  PYPY_VERSION: 7.3.16
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -63,7 +64,6 @@ jobs:
       fail-fast: true
       matrix:
         PYPY_BASE: ["2.7", "3.9", "3.10"]
-        PYPY_VERSION: ["7.3.16"]
         RUNNER: ["self-hosted", "ubuntu-latest"]
 
     steps:
@@ -89,7 +89,7 @@ jobs:
         run: |
           import os
           import requests
-          base_url = "https://pypy.cyberjake.xyz/pypy/${{ matrix.PYPY_BASE }}/pypy${{ matrix.PYPY_BASE }}-v${{ matrix.PYPY_VERSION }}-linux-${{ env.PYPY_ARCH }}-alpine.tar.bz2"
+          base_url = "https://pypy.cyberjake.xyz/pypy/${{ matrix.PYPY_BASE }}/pypy${{ matrix.PYPY_BASE }}-v${{ env.PYPY_VERSION }}-linux-${{ env.PYPY_ARCH }}-alpine.tar.bz2"
           file_resp = requests.head(base_url)
           signature_resp = requests.head(f"{base_url}.sig")
           if file_resp.status_code == 404 or signature_resp.status_code == 404:
@@ -115,9 +115,9 @@ jobs:
       - name: Run Build
         if: steps.file-check.outputs.STATUS == 404
         run: |
-          PYPY_SHA256SUM=$(curl -s https://api.cyberjake.xyz/pypy/checksums/pypy${{ matrix.PYPY_BASE }}-v${{ matrix.PYPY_VERSION }}-src.tar.bz2 | jq --raw-output .results[0].checksum)
+          PYPY_SHA256SUM=$(curl -s https://api.cyberjake.xyz/pypy/checksums/pypy${{ matrix.PYPY_BASE }}-v${{ env.PYPY_VERSION }}-src.tar.bz2 | jq --raw-output .results[0].checksum)
           echo "${PYPY_SHA256SUM}"
-          docker run --platform linux/${{ env.ARCH }}  -v $(pwd)/tmp:/tmp -e PYPY_BASE=${{ matrix.PYPY_BASE }} -e PYPY_VERSION=${{ matrix.PYPY_VERSION }} -e PYPY_SHA256SUM="${PYPY_SHA256SUM}" ${{ env.BUILDER_IMAGE_TAG }}:${{ env.ALPINE_VERSION }}-${{ github.sha }}
+          docker run --platform linux/${{ env.ARCH }}  -v $(pwd)/tmp:/tmp -e PYPY_BASE=${{ matrix.PYPY_BASE }} -e PYPY_VERSION=${{ env.PYPY_VERSION }} -e PYPY_SHA256SUM="${PYPY_SHA256SUM}" ${{ env.BUILDER_IMAGE_TAG }}:${{ env.ALPINE_VERSION }}-${{ github.sha }}
 
       - name: Import GPG key
         uses: crazy-max/ghaction-import-gpg@v6
@@ -132,15 +132,14 @@ jobs:
         run: |
           wget --quiet -O sign.py https://raw.githubusercontent.com/Cyb3r-Jak3/docker-alpine-pypy/${{ github.sha }}/.github/sign.py
           mkdir output
-          mv ./tmp/usession-release-pypy${{ matrix.PYPY_BASE }}-v${{ matrix.PYPY_VERSION }}-*/build/**.tar.bz2 ./output/pypy${{ matrix.PYPY_BASE }}-v${{ matrix.PYPY_VERSION }}-linux-${{ env.PYPY_ARCH }}-alpine.tar.bz2
+          mv ./tmp/usession-release-pypy${{ matrix.PYPY_BASE }}-v${{ env.PYPY_VERSION }}-*/build/**.tar.bz2 ./output/pypy${{ matrix.PYPY_BASE }}-v${{ env.PYPY_VERSION }}-linux-${{ env.PYPY_ARCH }}-alpine.tar.bz2
           find ./output/ -type f -exec python3 sign.py {} \;
           
       - name: Upload PyPy to Artifacts
         if: steps.file-check.outputs.STATUS == 404
-        # Leave with v3 so we can use the same name for the artifact
         uses: actions/upload-artifact@v4
         with:
-          name: pypy-${{ env.ARCH }}-${{ matrix.PYPY_BASE }}-${{ matrix.PYPY_VERSION }}
+          name: pypy-${{ env.ARCH }}-${{ matrix.PYPY_BASE }}-${{ env.PYPY_VERSION }}
           path: ./output
 
       - name: Clean files
@@ -148,3 +147,29 @@ jobs:
         run: |
           rm -rf output/
           rm -rf tmp/
+
+  Upload:
+    runs-on: ubuntu-latest
+    name: Upload PyPy builds
+    needs: Build
+
+    steps:
+      - name: Download upload script
+        run: |
+          wget --quiet -O upload.py https://raw.githubusercontent.com/Cyb3r-Jak3/docker-alpine-pypy/${{ github.sha }}/.github/upload.py
+          pip install boto3==1.34.90
+
+      - name: Download PyPy builds
+        uses: actions/download-artifact@v4
+        with:
+          pattern: 'pypy-*'
+          merge-multiple: true
+          path: ./output
+
+      - name: Upload PyPy builds
+        run: |
+          python upload.py
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+  
