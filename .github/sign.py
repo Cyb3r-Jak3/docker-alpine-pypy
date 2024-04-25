@@ -15,7 +15,7 @@ def sign(filename: str):
                 break
             sha256sum.update(data)
     with open(f"{filename}.sha256sum", "w") as f:
-        f.write(f"{sha256sum.hexdigest()}  {filename}")
+        f.write(f"{sha256sum.hexdigest()}  {filename.split('/')[-1]}")
 
 
 if __name__ == "__main__":

@@ -10,7 +10,7 @@ ENV GPG_KEY=44FE09DEE9E9EC21EF903F06CA614AB6BD73BB06
 
 # Download the source
 ARG PYPY_BASE=3.10
-ARG PYPY_VERSION=7.3.15
+ARG PYPY_VERSION=7.3.16
 
 RUN set -ex; \
     apk add --no-cache --virtual .fetch-deps \
@@ -41,6 +41,7 @@ RUN set -ex; \
     pypy --version
 
 # if this is called "PIP_VERSION", pip explodes with "ValueError: invalid truth value '<VERSION>'"
+# 20.3.4 is the last version that supports Python 2.7
 ENV PYTHON_PIP_VERSION 20.3.4
 ARG PIP_URL=https://bootstrap.pypa.io/get-pip.py
 RUN set -ex; \
