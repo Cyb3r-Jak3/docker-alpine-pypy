@@ -41,7 +41,8 @@ RUN set -ex; \
     pypy --version
 
 # if this is called "PIP_VERSION", pip explodes with "ValueError: invalid truth value '<VERSION>'"
-ENV PYTHON_PIP_VERSION 24.0
+# 20.3.4 is the last version that supports Python 2.7
+ENV PYTHON_PIP_VERSION 20.3.4
 ARG PIP_URL=https://bootstrap.pypa.io/get-pip.py
 RUN set -ex; \
     \
