@@ -41,5 +41,8 @@ def upload_file(file_name: str) -> None:
 
 
 if __name__ == "__main__":
+    if not os.path.exists("output"):
+        print("No output directory found. Assuming no files to upload. Exiting.")
+        exit(0)
     for file in os.listdir("output"):
         upload_file(file)
