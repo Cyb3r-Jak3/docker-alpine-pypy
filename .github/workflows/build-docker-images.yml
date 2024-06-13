@@ -15,8 +15,10 @@ concurrency:
   cancel-in-progress: true
 
 permissions:
+  id-token: write
   contents: read
   packages: write
+  attestations: write
 
 env:
   DOCKER_USERNAME: cyb3rjak3
@@ -87,6 +89,8 @@ jobs:
           targets: ${{ matrix.target }}-release
           push: ${{ github.ref == 'refs/heads/main' }}
           pull: true
+          provenance: true
+          sbom: true
           set: |
             *.cache-from=type=registry,ref=ghcr.io/cyb3r-jak3/alpine-pypy-cache:${{ matrix.target }}
             *.cache-to=type=registry,ref=ghcr.io/cyb3r-jak3/alpine-pypy-cache:${{ matrix.target }},mode=max
