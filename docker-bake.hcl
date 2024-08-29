@@ -7,11 +7,11 @@ target "docker-metadata-action" {
 }
 
 variable "PYPY_VERSION" {
-    default = "7.3.16"
+    default = "7.3.17"
 }
 
 variable "ALPINE_VERSION" {
-    default = "3.19"
+    default = "3.20"
 }
 
 target "alpine-pypy-2_7" {
@@ -34,13 +34,13 @@ target "alpine-pypy-3_9" {
     context = "./export"
     args =  {
         PYPY_BASE = "3.9"
-        PYPY_VERSION = "${PYPY_VERSION}"
+        PYPY_VERSION = "7.3.16"
         ALPINE_VERSION = "${ALPINE_VERSION}"
     }
     
     tags = [
-        "cyb3rjak3/alpine-pypy:3.9-${PYPY_VERSION}-${ALPINE_VERSION}",
-        "ghcr.io/cyb3r-jak3/alpine-pypy:3.9-${PYPY_VERSION}-${ALPINE_VERSION}"
+        "cyb3rjak3/alpine-pypy:3.9-7.3.16-${ALPINE_VERSION}",
+        "ghcr.io/cyb3r-jak3/alpine-pypy:3.9-7.3.16-${ALPINE_VERSION}"
     ]
 }
 
@@ -96,7 +96,7 @@ target "python-2_7" {
     platforms = [
         "linux/amd64",
         "linux/arm64",
-        // "linux/386"
+        // "linux/riscv64"
     ]
 }
 

@@ -10,7 +10,7 @@ ENV GPG_KEY=44FE09DEE9E9EC21EF903F06CA614AB6BD73BB06
 
 # Download the source
 ARG PYPY_BASE=3.10
-ARG PYPY_VERSION=7.3.16
+ARG PYPY_VERSION=7.3.17
 
 RUN set -ex; \
     apk add --no-cache --virtual .fetch-deps \
