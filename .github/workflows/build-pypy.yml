@@ -15,9 +15,9 @@ permissions:
 
 
 env:
-  ALPINE_VERSION: 3.19
+  ALPINE_VERSION: 3.20
   BUILDER_IMAGE_TAG: ghcr.io/cyb3r-jak3/alpine-pypy-builder-workflow
-  PYPY_VERSION: 7.3.16
+  PYPY_VERSION: 7.3.17
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -95,6 +95,18 @@ jobs:
           if file_resp.status_code == 404 or signature_resp.status_code == 404:
             with open(os.environ['GITHUB_OUTPUT'], 'a') as fh:
               print('STATUS=404', file=fh)
+          checksum_resp = requests.get("https://api.cyberjake.xyz/pypy/checksums/pypy${{ matrix.PYPY_BASE }}-v${{ env.PYPY_VERSION }}-src.tar.bz2")
+          checksum_resp.raise_for_status()
+          checksum_json = checksum_resp.json()['results']
+          if len(checksum_json) == 0:
+            print("::warning title=Checksum not found:: Missing checksum for PyPy version ${{ env.PYPY_VERSION }} and base ${{ matrix.PYPY_BASE }}")
+            with open(os.environ['GITHUB_OUTPUT'], 'a') as fh:
+              print('STATUS=204', file=fh)
+              exit(0)
+          if len(checksum_json[0]['checksum']) == 0:
+            print("::warning title=Checksum not found:: Missing checksum for PyPy version ${{ env.PYPY_VERSION }} and base ${{ matrix.PYPY_BASE }}")
+            with open(os.environ['GITHUB_OUTPUT'], 'a') as fh:
+              print('STATUS=204', file=fh)
 
       - name: Login To GitHub
         if: steps.file-check.outputs.STATUS == 404

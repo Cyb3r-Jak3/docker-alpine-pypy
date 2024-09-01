@@ -60,13 +60,20 @@ jobs:
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Login to my JFrog Artifactory
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.ARTIFACTORY_USER }}
+          password: ${{ secrets.ARTIFACTORY_TOKEN }}
+          registry: mine.jfrog.cyberjake.xyz
+
       - name: Docker Meta
         id: meta
         uses: docker/metadata-action@v5
         with:
           flavor: |
             latest=false
-          images: cyb3rjak3/${{ matrix.target }}
+          images: cyb3rjak3/${{ matrix.target }},ghcr.io/cyb3r-jak3/${{ matrix.target }},mine.jfrog.cyberjake.xyz/${{ matrix.target }}
           labels: |
             org.label-schema.vcs-url=https://github.com/Cyb3r-Jak3/docker-alpine-pypy.git
             maintainer=Cyb3r Jak3 git@cyberjake.xyz

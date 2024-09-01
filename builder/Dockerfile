@@ -3,7 +3,7 @@ ARG BUILD_IMAGE=ghcr.io/cyb3r-jak3/python-2.7.18:3.17
 FROM ${BUILD_IMAGE}
 
 # Add build dependencies
-RUN apk add --no-cache --virtual .build-deps \
+RUN --mount=type=cache,target=/var/cache/apk,sharing=locked apk add --no-cache --virtual .build-deps \
         bzip2-dev \
         expat-dev \
         gcc \
@@ -23,7 +23,7 @@ RUN apk add --no-cache --virtual .build-deps \
         xz-dev \
         zlib-dev
 
-RUN pip install --no-cache-dir --disable-pip-version-check pycparser
+RUN --mount=type=cache,target=/root/.cache/pip pip install --disable-pip-version-check pycparser
 
 WORKDIR /usr/src/pypy
 
