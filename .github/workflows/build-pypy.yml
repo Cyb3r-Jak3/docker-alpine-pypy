@@ -15,9 +15,9 @@ permissions:
 
 
 env:
-  ALPINE_VERSION: 3.20
+  ALPINE_VERSION: 3.21
   BUILDER_IMAGE_TAG: ghcr.io/cyb3r-jak3/alpine-pypy-builder-workflow
-  PYPY_VERSION: 7.3.17
+  PYPY_VERSION: 7.3.18
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -63,7 +63,7 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
-        PYPY_BASE: ["2.7", "3.9", "3.10"]
+        PYPY_BASE: ["2.7", "3.10", "3.11"]
         RUNNER: ["self-hosted", "ubuntu-latest"]
 
     steps:

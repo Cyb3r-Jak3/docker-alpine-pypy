@@ -7,11 +7,11 @@ target "docker-metadata-action" {
 }
 
 variable "PYPY_VERSION" {
-    default = "7.3.17"
+    default = "7.3.18"
 }
 
 variable "ALPINE_VERSION" {
-    default = "3.20"
+    default = "3.21"
 }
 
 target "alpine-pypy-2_7" {
@@ -29,21 +29,6 @@ target "alpine-pypy-2_7" {
     ]
     
 }
-
-target "alpine-pypy-3_9" {
-    context = "./export"
-    args =  {
-        PYPY_BASE = "3.9"
-        PYPY_VERSION = "7.3.16"
-        ALPINE_VERSION = "${ALPINE_VERSION}"
-    }
-    
-    tags = [
-        "cyb3rjak3/alpine-pypy:3.9-7.3.16-${ALPINE_VERSION}",
-        "ghcr.io/cyb3r-jak3/alpine-pypy:3.9-7.3.16-${ALPINE_VERSION}"
-    ]
-}
-
 target "alpine-pypy-3_10" {
     context = "./export"
     args = {
@@ -55,6 +40,20 @@ target "alpine-pypy-3_10" {
     tags = [
         "cyb3rjak3/alpine-pypy:3.10-${PYPY_VERSION}-${ALPINE_VERSION}",
         "ghcr.io/cyb3r-jak3/alpine-pypy:3.10-${PYPY_VERSION}-${ALPINE_VERSION}"
+    ]
+}
+
+target "alpine-pypy-3_11" {
+    context = "./export"
+    args = {
+        PYPY_BASE = "3.11"
+        PYPY_VERSION = "${PYPY_VERSION}"
+        ALPINE_VERSION = "${ALPINE_VERSION}"
+    }
+
+    tags = [
+        "cyb3rjak3/alpine-pypy:3.11-${PYPY_VERSION}-${ALPINE_VERSION}",
+        "ghcr.io/cyb3r-jak3/alpine-pypy:3.11-${PYPY_VERSION}-${ALPINE_VERSION}"
     ]
 }
 
@@ -104,13 +103,12 @@ target "alpine-pypy-2_7-release" {
     inherits = ["docker-metadata-action", "alpine-pypy-2_7"]
 }
 
-
-target "alpine-pypy-3_9-release" {
-    inherits = ["docker-metadata-action", "alpine-pypy-3_9"]
-}
-
 target "alpine-pypy-3_10-release" {
     inherits = ["docker-metadata-action", "alpine-pypy-3_10"]
+}
+
+target "alpine-pypy-3_11-release" {
+    inherits = ["docker-metadata-action", "alpine-pypy-3_11"]
 }
 
 target "alpine-pypy-builder-release" {
