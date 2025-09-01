@@ -12,8 +12,7 @@
       "datasourceTemplate": "docker",
       "packageNameTemplate": "alpine",
       "versioningTemplate": "docker",
-      "depNameTemplate": "alpine",
-      "replaceStringTemplate": "variable \"ALPINE_VERSION\" {\n    default = \"{{{newValue}}}\"\n}"
+      "depNameTemplate": "alpine"
     }
   ]
 }
