@@ -29,7 +29,7 @@ jobs:
     name: Prep Docker Container
     steps:
 
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5
 
       - name: Login To GitHub
         uses: docker/login-action@184bdaa0721073962dff0199f1fb9940f07167d1 # v3.5.0
@@ -172,7 +172,7 @@ jobs:
           pip install boto3==1.35.99
 
       - name: Download PyPy builds
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@634f93cb2916e3fdff6788551b99b062d0335ce0 # v5
         with:
           pattern: 'pypy-*'
           merge-multiple: true
