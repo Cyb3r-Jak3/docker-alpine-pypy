@@ -1,4 +1,4 @@
-ARG ALPINE_VERSION
+ARG ALPINE_VERSION=latest
 FROM alpine:${ALPINE_VERSION}
 
 # ensure local pypy is preferred over distribution python

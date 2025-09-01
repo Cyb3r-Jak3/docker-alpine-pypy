@@ -11,7 +11,7 @@ variable "PYPY_VERSION" {
 }
 
 variable "ALPINE_VERSION" {
-    default = "3.20"
+    default = "3.22"
 }
 
 target "alpine-pypy-2_7" {
