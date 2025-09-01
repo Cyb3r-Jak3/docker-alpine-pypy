@@ -132,7 +132,7 @@ jobs:
           docker run --platform linux/${{ env.ARCH }}  -v $(pwd)/tmp:/tmp -e PYPY_BASE=${{ matrix.PYPY_BASE }} -e PYPY_VERSION=${{ env.PYPY_VERSION }} -e PYPY_SHA256SUM="${PYPY_SHA256SUM}" ${{ env.BUILDER_IMAGE_TAG }}:${{ env.ALPINE_VERSION }}-${{ github.sha }}
 
       - name: Import GPG key
-        uses: crazy-max/ghaction-import-gpg@v6
+        uses: crazy-max/ghaction-import-gpg@e89d40939c28e39f97cf32126055eeae86ba74ec # v6.3.0
         if: steps.file-check.outputs.STATUS == 404
         with:
           gpg_private_key: ${{ secrets.GPG_PRIVATE_KEY }}
