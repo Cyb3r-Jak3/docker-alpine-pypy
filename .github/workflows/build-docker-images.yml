@@ -88,6 +88,8 @@ jobs:
           targets: ${{ matrix.target }}-release
           push: ${{ github.ref == 'refs/heads/main' }}
           pull: true
+          provenance: true
+          sbom: true
           set: |
             *.cache-from=type=registry,ref=ghcr.io/cyb3r-jak3/alpine-pypy-cache:${{ matrix.target }}
             *.cache-to=type=registry,ref=ghcr.io/cyb3r-jak3/alpine-pypy-cache:${{ matrix.target }},mode=max
