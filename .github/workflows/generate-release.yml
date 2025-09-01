@@ -61,6 +61,6 @@ jobs:
               *.tar.bz2.sig
               checksums.sha256
 
-        - uses: actions/attest-build-provenance@v2
+        - uses: actions/attest-build-provenance@v3
           with:
             subject-checksums: checksums.sha256
