@@ -14,6 +14,7 @@ RUN --mount=type=cache,target=/var/cache/apk,sharing=locked apk add --no-cache -
         make \
         ncurses-dev \
         openssl-dev \
+        patch \
         pax-utils \
         readline-dev \
         sqlite-dev \
