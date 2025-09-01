@@ -64,7 +64,7 @@ jobs:
       fail-fast: true
       matrix:
         PYPY_BASE: ["2.7", "3.9", "3.10"]
-        RUNNER: ["self-hosted", "ubuntu-latest"]
+        RUNNER: ["ubuntu-24.04-arm", "ubuntu-latest"]
 
     steps:
 
@@ -74,7 +74,7 @@ jobs:
         shell: python
         run: |
           import os
-          if os.environ["RUNS_ON"] == "self-hosted":
+          if os.environ["RUNS_ON"] == "ubuntu-24.04-arm":
             with open(os.environ['GITHUB_ENV'], 'a') as fh:
               print('ARCH=arm64', file=fh)
               print('PYPY_ARCH=aarch64', file=fh)
