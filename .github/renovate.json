@@ -3,9 +3,12 @@
   "extends": [
     "github>Cyb3r-Jak3/renovate-configs//recommend-extended.json"
   ],
-  "regexManagers": [
+  "customManagers": [
     {
-      "fileMatch": ["docker-bake\\.hcl"],
+      "customType": "regex",
+      "managerFilePatterns": [
+        "/docker-bake\\.hcl/"
+      ],
       "matchStrings": [
         "variable\\s+\"ALPINE_VERSION\"\\s*\\{\\s*default\\s*=\\s*\"(?<currentValue>[^\"]+)\""
       ],
