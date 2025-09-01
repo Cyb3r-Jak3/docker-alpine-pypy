@@ -1,4 +1,6 @@
-ARG ALPINE_VERSION
+# syntax=docker/dockerfile:1
+# check=skip=SecretsUsedInArgOrEnv
+ARG ALPINE_VERSION=latest@sha256:4bcff63911fcb4448bd4fdacec207030997caf25e9bea4045fa6c8c44de311d1
 FROM alpine:${ALPINE_VERSION}
 
 # Take from the last python 2.7 alpine image python:2.7.18-alpine

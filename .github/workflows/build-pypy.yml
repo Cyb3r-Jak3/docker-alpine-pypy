@@ -15,9 +15,9 @@ permissions:
 
 
 env:
-  ALPINE_VERSION: 3.20
+  ALPINE_VERSION: 3.22
   BUILDER_IMAGE_TAG: ghcr.io/cyb3r-jak3/alpine-pypy-builder-workflow
-  PYPY_VERSION: 7.3.17
+  PYPY_VERSION: 7.3.18
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -50,7 +50,7 @@ jobs:
           context: "builder/"
           tags: ${{ env.BUILDER_IMAGE_TAG }}:${{ env.ALPINE_VERSION }}-${{ github.sha }}
           build-args: |
-            BUILD_IMAGE=ghcr.io/cyb3r-jak3/alpine-pypy:2.7-7.3.14-3.19
+            BUILD_IMAGE=ghcr.io/cyb3r-jak3/python-2.7.18:3.22@sha256:48b239b8bc9ffe1e5d7ae2f14d0cc138b94f12c0e03dd534911e5293201ba671
           cache-to: type=gha,mode=max,scope=buildx-alpine-pypy-workflow-builder:${{ env.ALPINE_VERSION }}
           cache-from: type=gha,scope=buildx-alpine-pypy-workflow-builder:${{ env.ALPINE_VERSION }}
           platforms: linux/amd64, linux/arm64
@@ -63,7 +63,7 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
-        PYPY_BASE: ["2.7", "3.9", "3.10"]
+        PYPY_BASE: ["2.7", "3.10", "3.11"]
         RUNNER: ["ubuntu-24.04-arm", "ubuntu-latest"]
 
     steps:
