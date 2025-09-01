@@ -1,5 +1,5 @@
 # Use bootstrap image by default
-ARG BUILD_IMAGE=ghcr.io/cyb3r-jak3/python-2.7.18:3.21@sha256:95a59bd263487b80807fe6320e378d3722e05edc4bb3d234fda49af217d0f7ea
+ARG BUILD_IMAGE=ghcr.io/cyb3r-jak3/python-2.7.18:3.22@sha256:48b239b8bc9ffe1e5d7ae2f14d0cc138b94f12c0e03dd534911e5293201ba671
 FROM ${BUILD_IMAGE}
 
 # Add build dependencies
