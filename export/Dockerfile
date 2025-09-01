@@ -2,11 +2,11 @@ ARG ALPINE_VERSION=latest
 FROM alpine:${ALPINE_VERSION}
 
 # ensure local pypy is preferred over distribution python
-ENV PATH /usr/local/bin:$PATH
+ENV PATH=/usr/local/bin:$PATH
 
-ENV LANG C.UTF-8
+ENV LANG=C.UTF-8
 ENV PYTHONIOENCODING=UTF-8
-ENV GPG_KEY=44FE09DEE9E9EC21EF903F06CA614AB6BD73BB06
+ENV GPG_KEY_ID=44FE09DEE9E9EC21EF903F06CA614AB6BD73BB06
 
 # Download the source
 ARG PYPY_BASE=3.10
@@ -21,7 +21,7 @@ RUN set -ex; \
     wget -O pypy.tar.bz2 "https://pypy.cyberjake.xyz/pypy/${PYPY_BASE}/${FILENAME}" && \
     wget -O pypy.tar.bz2.sig "https://pypy.cyberjake.xyz/pypy/${PYPY_BASE}/${FILENAME}.sig" && \
     export GNUPGHOME="$(mktemp -d)" && \
-    gpg --batch --keyserver hkps://keys.openpgp.org --recv-keys "$GPG_KEY" && \
+    gpg --batch --keyserver hkps://keys.openpgp.org --recv-keys "$GPG_KEY_ID" && \
     gpg --batch --verify pypy.tar.bz2.sig pypy.tar.bz2 && \
     { command -v gpgconf > /dev/null && gpgconf --kill all || :; } && \
     rm -rf "$GNUPGHOME" pypy.tar.xz.sig && \

@@ -8,7 +8,7 @@ ENV PYTHON_VERSION=2.7.18
 
 # This is my release key. The existing key used to sign python 2.7.18 doesn't load in gpg
 # Still download the release from python so show it hasn't been tampered with
-ENV GPG_KEY=44FE09DEE9E9EC21EF903F06CA614AB6BD73BB06
+ENV GPG_KEY_ID=44FE09DEE9E9EC21EF903F06CA614AB6BD73BB06
 
 RUN apk add --update --no-cache ca-certificates
 
@@ -19,7 +19,7 @@ RUN /bin/sh -c set -ex 	&& apk add --no-cache --virtual .fetch-deps \
     wget -O python.tar.xz "https://www.python.org/ftp/python/${PYTHON_VERSION%%[a-z]*}/Python-$PYTHON_VERSION.tar.xz" && \
     wget -O python.tar.xz.asc "https://pypy.cyberjake.xyz/python/python-${PYTHON_VERSION%%[a-z]*}/python-$PYTHON_VERSION.tar.xz.sig" && \
     export GNUPGHOME="$(mktemp -d)" && \
-    gpg --batch --keyserver hkp://keys.openpgp.org:80 --recv-keys "$GPG_KEY" && \
+    gpg --batch --keyserver hkp://keys.openpgp.org:80 --recv-keys "$GPG_KEY_ID" && \
     gpg --batch --verify python.tar.xz.asc python.tar.xz && \
     { command -v gpgconf > /dev/null && gpgconf --kill all || :; }&& \
     rm -rf "$GNUPGHOME" python.tar.xz.asc && \
