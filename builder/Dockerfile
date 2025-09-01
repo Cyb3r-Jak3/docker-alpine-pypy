@@ -28,6 +28,7 @@ RUN --mount=type=cache,target=/root/.cache/pip pip install --disable-pip-version
 WORKDIR /usr/src/pypy
 
 COPY build.sh /build.sh
+COPY patches/ /tmp/patches/
 
 RUN chmod +x /build.sh
 

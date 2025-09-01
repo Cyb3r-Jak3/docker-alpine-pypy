@@ -27,6 +27,10 @@ mkdir -p /usr/src/pypy
 tar -xjC /usr/src/pypy --strip-components=1 -f pypy.tar.bz2
 rm pypy.tar.bz2
 
+for patch in /tmp/patches/*.patch; do \
+    patch -p1 -E -i "$patch"; \
+done
+
 BASE_DIR="/usr/src/pypy"
 PYTHON="$(which pypy || which python)"
 
@@ -36,7 +40,7 @@ PYPY_ARCH="linux-$(apk --print-arch)-alpine"
 
 # set thread stack size to 1MB so we don't segfault before we hit sys.getrecursionlimit()
 # https://github.com/alpinelinux/aports/commit/2026e1259422d4e0cf92391ca2d3844356c649d0
-export CFLAGS="-DTHREAD_STACK_SIZE=0x100000 -Wno-macro-redefined -Wno-array-bounds -Wno-pointer-sign $CFLAGS"
+export CFLAGS="-DTHREAD_STACK_SIZE=0x100000 -Wno-array-bounds -Wno-pointer-sign $CFLAGS"
 
 # Translation
 cd "$BASE_DIR"/pypy/goal
