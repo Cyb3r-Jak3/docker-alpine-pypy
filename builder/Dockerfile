@@ -25,11 +25,11 @@ RUN --mount=type=cache,target=/var/cache/apk,sharing=locked apk add --no-cache -
         zlib-dev
 
 RUN --mount=type=cache,target=/root/.cache/pip pip install --disable-pip-version-check pycparser
+COPY patches/ /tmp/patches/
 
 WORKDIR /usr/src/pypy
 
 COPY build.sh /build.sh
-COPY patches/ /tmp/patches/
 
 RUN chmod +x /build.sh
 

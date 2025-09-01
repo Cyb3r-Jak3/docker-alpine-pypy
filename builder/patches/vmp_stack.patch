@@ -1,5 +1,0 @@
---- a/rpython/rlib/rvmprof/src/shared/vmp_stack.c
-+++ b/rpython/rlib/rvmprof/src/shared/vmp_stack.c
-@@ -1,7 +1,11 @@
--        *depth = vmprof_write_header_for_jit_addr(result, *depth, pc, max_depth);
-+        *depth = vmprof_write_header_for_jit_addr((intptr_t *)result, *depth, pc, max_depth);

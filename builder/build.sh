@@ -27,9 +27,11 @@ mkdir -p /usr/src/pypy
 tar -xjC /usr/src/pypy --strip-components=1 -f pypy.tar.bz2
 rm pypy.tar.bz2
 
-for patch in /tmp/patches/*.patch; do \
+for patch in /tmp/patches/*; do \
     patch -p1 -E -i "$patch"; \
 done
+
+sed -i 's/vmprof_write_header_for_jit_addr(result,/vmprof_write_header_for_jit_addr((intptr_t *)result,/' rpython/rlib/rvmprof/src/shared/vmp_stack.c
 
 BASE_DIR="/usr/src/pypy"
 PYTHON="$(which pypy || which python)"
