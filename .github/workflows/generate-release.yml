@@ -21,7 +21,7 @@ jobs:
       TAG: "${{ github.event.inputs.pypy_version }}-${{ github.event.inputs.pypy_base }}"
     steps:
         - name: Checkout code
-          uses: actions/checkout@v4
+          uses: actions/checkout@v5
         - name: Release Info
           run: |
               echo "::notice title=PYPY_BASE::${{ github.event.inputs.pypy_base }}"
