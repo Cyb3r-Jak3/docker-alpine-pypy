@@ -2,5 +2,18 @@
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
     "github>Cyb3r-Jak3/renovate-configs//recommend-extended.json"
+  ],
+  "regexManagers": [
+    {
+      "fileMatch": ["docker-bake\\.hcl"],
+      "matchStrings": [
+        "variable\\s+\"ALPINE_VERSION\"\\s*\\{\\s*default\\s*=\\s*\"(?<currentValue>[^\"]+)\""
+      ],
+      "datasourceTemplate": "docker",
+      "packageNameTemplate": "alpine",
+      "versioningTemplate": "docker",
+      "depNameTemplate": "alpine",
+      "replaceStringTemplate": "variable \"ALPINE_VERSION\" {\n    default = \"{{{newValue}}}\"\n}"
+    }
   ]
 }
